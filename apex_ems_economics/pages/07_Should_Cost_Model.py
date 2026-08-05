@@ -36,16 +36,19 @@ if comp.empty:
     st.info("No quotes for this product.")
     st.stop()
 st.dataframe(comp, hide_index=True, width="stretch", column_config={
-    "quoted_price": st.column_config.NumberColumn("Quoted price", format="$%,.2f"),
-    "should_cost": st.column_config.NumberColumn("Should-cost", format="$%,.2f"),
-    "current_standard_cost": st.column_config.NumberColumn("Std cost", format="$%,.2f"),
-    "variance_usd": st.column_config.NumberColumn("Variance $", format="$%,.2f"),
+    "quoted_price": st.column_config.NumberColumn("Quoted price (EMS scope)", format="$%,.0f"),
+    "should_cost": st.column_config.NumberColumn("Should-cost (EMS scope)", format="$%,.0f"),
+    "consigned_material": st.column_config.NumberColumn("Consigned mat. (excluded)", format="$%,.0f"),
+    "current_standard_cost": st.column_config.NumberColumn("Std cost (all-in)", format="$%,.0f"),
+    "variance_usd": st.column_config.NumberColumn("Variance $", format="$%,.0f"),
     "variance_pct": st.column_config.NumberColumn("Variance %", format="%.1f%%"),
 })
 st.caption(
-    "Positive variance = quote above should-cost. **This is not automatically supplier "
-    "overpricing** — see the interpretation split below. Comparable-product and historical-cost "
-    "comparisons can be added to the assumption register as benchmarks.")
+    "Quotes and should-cost are EMS scope (OEM-consigned material excluded and added separately "
+    "by the economic engine); standard cost is all-in. Positive variance = quote above "
+    "should-cost. **This is not automatically supplier overpricing** — see the interpretation "
+    "split below. Comparable-product and historical-cost comparisons can be added to the "
+    "assumption register as benchmarks.")
 
 if method.startswith("Level 1"):
     st.subheader("Level 1 benchmark structure")

@@ -58,10 +58,10 @@ st.dataframe(rollup, hide_index=True, width="stretch", column_config={
 st.divider()
 st.subheader("Bundled pricing: unexplained residual")
 st.caption(
-    "For bundled quotes the residual is what the quote does not explain after identified "
-    "material and estimated conversion. **It is an analytical estimate - NOT proof of supplier "
-    "overcharging.** It may reflect missing BOM lines, benchmark error, spec differences, or "
-    "genuine commercial opportunity.")
+    "Quotes cover the EMS scope only (OEM-consigned material is excluded), so the residual is "
+    "quote minus identified EMS-scope material minus estimated conversion. **It is an analytical "
+    "estimate - NOT proof of supplier overcharging.** It may reflect missing BOM lines, benchmark "
+    "error, spec differences, or genuine commercial opportunity.")
 
 quotes = data["supplier_quotes"]
 res_rows = []
@@ -72,7 +72,8 @@ for _, q in quotes.iterrows():
     res_rows.append({
         "quote_id": q["quote_id"], "product_id": q["product_id"], "supplier_id": q["supplier_id"],
         "Quoted price": r["quoted_price"],
-        "Identified material": r["identified_material"],
+        "Identified EMS material": r["identified_material"],
+        "Consigned (excluded)": r.get("consigned_material_excluded", 0.0),
         "Estimated conversion": r["estimated_conversion"],
         "Residual": r["residual"],
         "Residual %": r["residual_pct"],
@@ -81,7 +82,8 @@ for _, q in quotes.iterrows():
 residuals = pd.DataFrame(res_rows)
 st.dataframe(residuals, hide_index=True, width="stretch", column_config={
     "Quoted price": st.column_config.NumberColumn(format="$%,.0f"),
-    "Identified material": st.column_config.NumberColumn(format="$%,.0f"),
+    "Identified EMS material": st.column_config.NumberColumn(format="$%,.0f"),
+    "Consigned (excluded)": st.column_config.NumberColumn(format="$%,.0f"),
     "Estimated conversion": st.column_config.NumberColumn(format="$%,.0f"),
     "Residual": st.column_config.NumberColumn(format="$%,.0f"),
     "Residual %": st.column_config.NumberColumn(format="%.1f%%"),

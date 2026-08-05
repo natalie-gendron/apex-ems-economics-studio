@@ -1,14 +1,14 @@
 quote_id,supplier_id,product_id,base_unit_price,currency,price_effective_date,tier2_min_qty,tier2_unit_price,tier3_min_qty,tier3_unit_price,quoted_material_content,quoted_conversion_content,includes_freight,includes_duties,annual_price_reduction_pct,quote_source,status,confidence,valid_until,notes
-Q-ATL-P100,SUP-ATL,P-100,842,USD,2026-04-01,10000,828,15000,815,588,254,FALSE,FALSE,2.0,RFQ May 2026,Confirmed,High,2026-12-31,Partial open-book; material detail provided
-Q-MER-P100,SUP-MER,P-100,785,USD,2026-05-15,10000,772,15000,758,,,FALSE,FALSE,1.0,RFQ May 2026,Confirmed,Medium,2026-11-30,Bundled price; no material breakdown provided
-Q-PAC-P100,SUP-PAC,P-100,868,USD,2026-03-20,10000,851,15000,838,600,268,FALSE,FALSE,2.5,Budgetary quote,Estimated,Medium,2026-09-30,Budgetary; Pacific not yet qualified for P-100
-Q-ATL-P200,SUP-ATL,P-200,1238,USD,2026-04-01,4000,1224,6000,1205,872,366,FALSE,FALSE,2.0,RFQ Apr 2026,Confirmed,High,2026-12-31,OEM-consigned RF components excluded from price
-Q-PAC-P200,SUP-PAC,P-200,1312,USD,2026-06-10,4000,1296,6000,1275,905,407,FALSE,FALSE,2.0,RFQ Jun 2026,Confirmed,High,2026-12-31,Second-source quote for dual-source scenario
-Q-MER-P300,SUP-MER,P-300,312,USD,2026-02-01,8000,306,12000,299,,,FALSE,FALSE,1.5,Contract price list,Confirmed,High,2026-12-31,Bundled turnkey price; no cost breakdown
-Q-ATL-P300,SUP-ATL,P-300,348,USD,2026-02-15,8000,342,12000,335,238,110,FALSE,FALSE,2.0,RFQ Feb 2026,Confirmed,High,2026-12-31,
-Q-PAC-P300,SUP-PAC,P-300,335,USD,2026-02-20,8000,330,12000,324,231,104,FALSE,FALSE,2.0,RFQ Feb 2026,Confirmed,Medium,2026-10-31,
-Q-PAC-P400,SUP-PAC,P-400,505,USD,2026-01-15,5000,498,8000,489,352,153,FALSE,FALSE,2.5,Contract price list,Confirmed,High,2026-12-31,
-Q-ATL-P400,SUP-ATL,P-400,512,USD,2026-03-05,5000,505,8000,496,356,156,FALSE,FALSE,2.0,RFQ Mar 2026,Confirmed,Medium,2026-09-30,
-Q-MER-P400,SUP-MER,P-400,468,USD,2026-05-01,5000,461,8000,452,,,FALSE,FALSE,1.0,Budgetary quote,Estimated,Low,2026-08-31,Not qualified; budgetary only
-Q-ATL-SA110,SUP-ATL,SA-110,118,USD,2026-04-01,10000,116,15000,114,84,34,FALSE,FALSE,2.0,RFQ May 2026,Confirmed,High,2026-12-31,
-Q-PAC-SA210,SUP-PAC,SA-210,86,USD,2026-04-01,4000,84,6000,82,58,28,FALSE,FALSE,2.0,RFQ Apr 2026,Confirmed,High,2026-12-31,Consigned to Atlas for P-200 final assembly
+Q-ATL-P100,SUP-ATL,P-100,11400,USD,2026-04-01,1500,11050,2400,10750,7030,3670,FALSE,FALSE,2.0,RFQ May 2026,Confirmed,High,2026-12-31,EMS scope only: OEM-consigned pin-electronics and timing ASICs excluded from price; partial open-book
+Q-MER-P100,SUP-MER,P-100,10450,USD,2026-05-15,1500,10100,2400,9800,,,FALSE,FALSE,1.0,RFQ May 2026,Confirmed,Medium,2026-11-30,EMS scope only (consigned ASICs excluded); bundled price with no cost breakdown
+Q-PAC-P100,SUP-PAC,P-100,11950,USD,2026-03-20,1500,11600,2400,11300,7100,3550,FALSE,FALSE,2.5,Budgetary quote,Estimated,Medium,2026-09-30,Budgetary; Pacific not yet qualified for channel cards; consigned ASICs excluded
+Q-ATL-P200,SUP-ATL,P-200,12950,USD,2026-04-01,400,12600,700,12300,5940,6330,FALSE,FALSE,2.0,RFQ Apr 2026,Confirmed,High,2026-12-31,EMS scope only: consigned mmWave silicon and machined carrier excluded from price
+Q-PAC-P200,SUP-PAC,P-200,13900,USD,2026-06-10,400,13550,700,13200,6120,6450,FALSE,FALSE,2.0,RFQ Jun 2026,Confirmed,High,2026-12-31,Second-source quote for dual-source scenario; consigned content excluded
+Q-MER-P300,SUP-MER,P-300,4300,USD,2026-02-01,3000,4150,5000,3990,,,FALSE,FALSE,1.5,Contract price list,Confirmed,High,2026-12-31,Bundled turnkey price; no material or labor visibility
+Q-ATL-P300,SUP-ATL,P-300,4590,USD,2026-02-15,3000,4450,5000,4310,3040,890,FALSE,FALSE,2.0,RFQ Feb 2026,Confirmed,High,2026-12-31,
+Q-PAC-P300,SUP-PAC,P-300,4530,USD,2026-02-20,3000,4390,5000,4250,2990,830,FALSE,FALSE,2.0,RFQ Feb 2026,Confirmed,Medium,2026-10-31,
+Q-PAC-P400,SUP-PAC,P-400,8050,USD,2026-01-15,1000,7800,1800,7560,5770,1990,FALSE,FALSE,2.5,Contract price list,Confirmed,High,2026-12-31,
+Q-ATL-P400,SUP-ATL,P-400,8400,USD,2026-03-05,1000,8150,1800,7900,5820,2150,FALSE,FALSE,2.0,RFQ Mar 2026,Confirmed,Medium,2026-09-30,
+Q-MER-P400,SUP-MER,P-400,7400,USD,2026-05-01,1000,7150,1800,6900,,,FALSE,FALSE,1.0,Budgetary quote,Estimated,Low,2026-08-31,Not qualified; budgetary only
+Q-ATL-SA110,SUP-ATL,SA-110,2420,USD,2026-04-01,1500,2350,2400,2290,1720,625,FALSE,FALSE,2.0,RFQ May 2026,Confirmed,High,2026-12-31,
+Q-PAC-SA210,SUP-PAC,SA-210,1900,USD,2026-04-01,400,1850,700,1800,1270,585,FALSE,FALSE,2.0,RFQ Apr 2026,Confirmed,High,2026-12-31,Consigned to Atlas for P-200 final assembly

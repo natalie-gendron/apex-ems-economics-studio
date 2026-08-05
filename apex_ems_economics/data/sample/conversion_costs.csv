@@ -1,13 +1,13 @@
 conv_id,product_id,supplier_id,labor_hours_per_unit,labor_rate,labor_burden_pct,machine_hours_per_unit,machine_rate,setup_hours,batch_size,test_hours,test_rate,inspection_cost_per_unit,packaging_cost_per_unit,indirect_labor_pct,factory_overhead_pct,program_mgmt_fee_pct,procurement_fee_pct,material_handling_fee_pct,supplier_margin_pct,utilization_pct,confidence,notes
-CV-ATL-P100,P-100,SUP-ATL,1.9,9.50,42,0.85,48,6,250,0.75,65,4.20,2.80,18,55,2.0,2.5,1.5,9.0,82,High,From partial open-book review May 2026
-CV-MER-P100,P-100,SUP-MER,2.3,4.10,38,0.95,41,8,400,0.80,52,3.10,2.40,20,62,2.5,3.5,2.0,11.0,78,Low,Estimated; Meridian provides no conversion breakdown
-CV-PAC-P100,P-100,SUP-PAC,2.0,6.80,40,0.88,45,6,300,0.78,58,3.80,2.60,18,58,2.0,2.8,1.6,9.5,80,Medium,Budgetary estimate from Pacific engineering
-CV-ATL-P200,P-200,SUP-ATL,3.4,9.50,42,1.30,52,10,120,2.10,88,6.50,3.40,18,55,2.0,2.5,1.5,9.0,82,High,RF cal drives test time
-CV-PAC-P200,P-200,SUP-PAC,3.6,6.80,40,1.35,50,10,150,2.30,82,6.10,3.20,18,58,2.0,2.8,1.6,9.5,80,High,
-CV-MER-P300,P-300,SUP-MER,1.1,4.10,38,0.40,38,5,600,0.35,45,1.80,1.60,20,62,2.5,3.5,2.0,11.0,78,Low,Estimated from benchmark labor content
-CV-ATL-P300,P-300,SUP-ATL,0.95,9.50,42,0.38,44,4,500,0.32,50,2.10,1.80,18,55,2.0,2.5,1.5,9.0,82,High,
-CV-PAC-P300,P-300,SUP-PAC,1.0,6.80,40,0.39,42,4,550,0.33,48,1.95,1.70,18,58,2.0,2.8,1.6,9.5,80,Medium,
-CV-PAC-P400,P-400,SUP-PAC,1.6,6.80,40,0.72,46,6,300,0.95,60,3.20,2.20,18,58,2.0,2.8,1.6,9.5,80,High,
-CV-ATL-P400,P-400,SUP-ATL,1.5,9.50,42,0.70,48,6,280,0.90,64,3.50,2.40,18,55,2.0,2.5,1.5,9.0,82,Medium,
-CV-ATL-SA110,SA-110,SUP-ATL,0.45,9.50,42,0.15,40,3,600,0.12,45,0.90,0.80,18,55,2.0,2.5,1.5,9.0,82,High,
-CV-PAC-SA210,SA-210,SUP-PAC,0.55,6.80,40,0.35,44,4,400,0.10,42,0.85,0.70,18,58,2.0,2.8,1.6,9.5,80,High,
+CV-ATL-P100,P-100,SUP-ATL,14,9.50,42,6,52,12,25,10,185,65,85,18,55,2.0,2.5,1.5,9.0,82,High,Test rate reflects golden-tester correlation time; from partial open-book review May 2026
+CV-MER-P100,P-100,SUP-MER,17,4.10,38,6.2,45,14,40,11,120,48,70,20,62,2.5,3.5,2.0,11.0,78,Low,Estimated; Meridian provides no conversion breakdown
+CV-PAC-P100,P-100,SUP-PAC,15,6.80,40,6,48,12,30,10.5,165,58,78,18,58,2.0,2.8,1.6,9.5,80,Medium,Budgetary estimate from Pacific engineering
+CV-ATL-P200,P-200,SUP-ATL,22,9.50,42,8,55,16,10,16,210,180,140,18,55,2.0,2.5,1.5,9.0,82,High,VNA calibration bench drives test time and rate
+CV-PAC-P200,P-200,SUP-PAC,24,6.80,40,8.5,52,16,10,17,205,170,130,18,58,2.0,2.8,1.6,9.5,80,High,
+CV-MER-P300,P-300,SUP-MER,6,4.10,38,2.5,40,8,60,2,95,28,32,20,62,2.5,3.5,2.0,11.0,78,Low,Estimated from benchmark labor content
+CV-ATL-P300,P-300,SUP-ATL,6.5,9.50,42,2.5,46,6,50,2,140,34,38,18,55,2.0,2.5,1.5,9.0,82,High,
+CV-PAC-P300,P-300,SUP-PAC,6.2,6.80,40,2.5,44,6,55,2,120,30,35,18,58,2.0,2.8,1.6,9.5,80,Medium,
+CV-PAC-P400,P-400,SUP-PAC,9,6.80,40,4,52,8,15,5,160,90,75,18,58,2.0,2.8,1.6,9.5,80,High,
+CV-ATL-P400,P-400,SUP-ATL,8.5,9.50,42,3.8,54,8,14,5.5,165,95,80,18,55,2.0,2.5,1.5,9.0,82,Medium,
+CV-ATL-SA110,SA-110,SUP-ATL,4,9.50,42,1.8,48,6,40,1.5,140,25,30,18,55,2.0,2.5,1.5,9.0,82,High,
+CV-PAC-SA210,SA-210,SUP-PAC,5,6.80,40,2.5,50,5,30,0.8,120,22,26,18,58,2.0,2.8,1.6,9.5,80,High,Machining and plating verification

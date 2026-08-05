@@ -3,8 +3,8 @@ OVR-001,SCN-003,contract_term,CT-ATL-PAY,value,absolute,75,Payment terms extende
 OVR-002,SCN-003,quote,Q-ATL-P100,price_multiplier,multiplier,1.006,0.6% price concession to Atlas for extended terms
 OVR-003,SCN-003,quote,Q-ATL-P200,price_multiplier,multiplier,1.006,0.6% price concession to Atlas for extended terms
 OVR-004,SCN-003,quote,Q-ATL-SA110,price_multiplier,multiplier,1.006,0.6% price concession to Atlas for extended terms
-OVR-005,SCN-003,inventory,INV-001,ownership_to_ems_share,absolute,60,60% of consigned P-100 raw converts to EMS-owned until consumption
-OVR-006,SCN-003,inventory,INV-007,ownership_to_ems_share,absolute,100,Carrier consignment converts to EMS-owned; strategic RF silicon (INV-006) stays consigned
+OVR-005,SCN-003,inventory,INV-001,ownership_to_ems_share,absolute,40,Standard long-lead portion of the consigned ASIC pool converts to EMS-owned; core pin-electronics consignment retained
+OVR-006,SCN-003,inventory,INV-007,ownership_to_ems_share,absolute,100,Carrier consignment converts to EMS-owned; strategic mmWave silicon (INV-006) stays consigned
 OVR-007,SCN-004,risk,RSK-006,probability_pct,absolute,3,Dual sourcing reduces single-source disruption probability from 10% to 3%
 OVR-008,SCN-002,risk,RSK-002,probability_pct,absolute,20,Higher Meridian share increases exposure to delivery shortfall
-OVR-009,SCN-002,service,SUP-MER,safety_stock_days,absolute,50,Additional safety stock during and after P-100 ramp at Meridian
+OVR-009,SCN-002,service,SUP-MER,safety_stock_days,absolute,50,Additional safety stock during and after the channel-card ramp at Meridian

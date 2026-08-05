@@ -143,8 +143,13 @@ is the only layer touching storage.
 
 ## Sample data and scenarios
 
-Fictional advanced test-equipment manufacturer **Novatron Test Systems** with three
-fictional EMS suppliers (no real supplier or customer data):
+Fictional ATE (automated test equipment) manufacturer **Novatron Test Systems** with
+three fictional EMS suppliers (no real supplier or customer data). The portfolio is
+ATE-class: a 256-channel pin-electronics channel card (~$18K all-in), a mmWave source &
+measure module (~$31K), a device power supply, a 36-layer device interface board, and two
+subassemblies — low volumes (450–3,600 units/yr), consigned strategic ASIC/mmWave
+silicon, golden-tester correlation time in conversion cost, and ~$55M annual EMS spend
+plus ~$18M of OEM-consigned material.
 
 | Supplier | Profile |
 |---|---|
@@ -152,19 +157,22 @@ fictional EMS suppliers (no real supplier or customer data):
 | **Meridian Electronics** (Penang) | Lowest quotes, bundled pricing, weak OTD/yield, aggressive liability terms, elevated risk |
 | **Pacific Integrated Systems** (Kaohsiung) | Best working-capital terms (net 75, EMS-owned material), strong high-mix, disaster exposure |
 
-Six products/subassemblies, component-level BOMs (with deliberately low-confidence
-benchmark BOMs where the supplier provides no visibility), and four scenarios:
+Quote convention: **supplier quotes cover the EMS scope only** — OEM-consigned material
+is excluded from the quote and added separately by the engine (never double counted).
+
+Four scenarios:
 
 1. **Current State** (baseline)
-2. **Shift 25% of P-100 to Meridian** — quote savings destroyed by landed cost, quality,
-   working capital, service, and risk (≈ **+$1.1M/yr** total economic cost)
-3. **Renegotiate Atlas inventory & payment terms** — ≈ **−$80K/yr** cost and ≈ **+$2.3M
+2. **Shift 25% of P-100 to Meridian** — the $950/board quote saving is destroyed by
+   tariffs, quality, working capital, service, risk, *and* the loss of Atlas tier-2
+   pricing when volume splits (≈ **+$3.2M/yr**, ≈ −$4.0M cash in year 1)
+3. **Renegotiate Atlas inventory & payment terms** — ≈ **−$0.3M/yr** cost and ≈ **+$5.0M
    cash freed** for a 0.6% price concession
-4. **Dual-Source the RF Front-End** — ≈ +$0.5M year 1 (mostly one-time) buys a ≈ **−$224K/yr
-   expected-risk reduction** on the single-sourced module
+4. **Dual-Source the mmWave module** — ≈ +$0.3M/yr running premium plus $2.2M one-time
+   buys a ≈ **−$0.7M/yr expected-risk reduction** on the single-sourced RF tester line
 
-The data is constructed so the lowest-quote supplier is *not* the lowest-economic-cost
-supplier — the studio's central lesson.
+On the flagship channel card, Meridian quotes $950/board below Atlas yet lands
+**$3,270/board worse** in true economic cost — the studio's central lesson.
 
 ## Assumption treatment
 

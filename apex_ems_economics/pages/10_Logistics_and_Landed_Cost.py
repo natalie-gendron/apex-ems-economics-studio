@@ -58,6 +58,7 @@ st.dataframe(df, hide_index=True, width="stretch", column_config={
     **{c: st.column_config.NumberColumn(c, format="$%,.2f") for c in money},
     "Annual logistics + duties": st.column_config.NumberColumn(
         "Annual logistics + duties", format="$%,.0f")})
-st.caption("In the sample data the Penang lane carries ~$17.50/unit ocean freight plus a 4.5% "
-           "tariff on a subset of HTS codes — a major reason Meridian's low quote does not "
-           "survive landed-cost scrutiny. Carbon/sustainability cost is a future enhancement.")
+st.caption("In the sample data the Penang lane carries ~$118/unit ocean freight plus a 4.5% "
+           "tariff — on a >$10K channel card the tariff alone is ~$450/unit, a major reason "
+           "Meridian's low quote does not survive landed-cost scrutiny. Carbon/sustainability "
+           "cost is a future enhancement.")

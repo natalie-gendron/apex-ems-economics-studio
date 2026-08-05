@@ -46,11 +46,19 @@ def level1_benchmark(quoted_price: float, structure: Optional[Dict[str, float]] 
 def process_based_should_cost(
     data: Dict[str, pd.DataFrame], product_id: str, supplier_id: str
 ) -> Dict[str, float]:
-    """Level 2/3 should-cost per unit: material + conversion (+ coverage stats)."""
+    """Level 2/3 should-cost per unit (+ coverage stats).
+
+    Convention: supplier quotes cover the EMS scope only - OEM-consigned
+    material is excluded from the quote (the economics engine adds it
+    separately). ``should_cost`` is therefore the quote-scope figure
+    (EMS material + conversion) so it compares apples-to-apples with the
+    quote; ``should_cost_all_in`` adds consigned material back.
+    """
     material = economics_engine.material_cost_per_unit(data, product_id)
     conversion = economics_engine.conversion_cost_per_unit(
         data, product_id, supplier_id, material["material_total"])
-    should_cost = material["material_total"] + conversion["conversion_total"]
+    should_cost = material["ems_material"] + conversion["conversion_total"]
+    should_cost_all_in = material["material_total"] + conversion["conversion_total"]
 
     bom = data.get("bom_items", pd.DataFrame())
     items = bom[bom["product_id"] == product_id] if bom is not None and not bom.empty else pd.DataFrame()
@@ -61,8 +69,11 @@ def process_based_should_cost(
 
     return {
         "material": material["material_total"],
+        "ems_material": material["ems_material"],
+        "consigned_material": material["consigned_material"],
         "conversion": conversion["conversion_total"],
         "should_cost": should_cost,
+        "should_cost_all_in": should_cost_all_in,
         "bom_lines": material["bom_lines"],
         "bom_high_confidence_share": coverage,
         "conversion_missing": conversion.get("conversion_missing", 1.0),
@@ -74,9 +85,10 @@ def unexplained_residual(
 ) -> Dict[str, float]:
     """Residual between the quoted price and everything we can identify.
 
-    residual = quote - identified material - estimated conversion
-    (Logistics/duties are excluded here because sample quotes exclude them;
-    quotes flagged as including freight/duties would need those subtracted.)
+    residual = quote - identified EMS-scope material - estimated conversion
+    (Consigned material is excluded because quotes cover the EMS scope only;
+    logistics/duties are excluded because sample quotes exclude them - quotes
+    flagged as including freight/duties would need those subtracted.)
 
     The residual is an analytical estimate. It can reflect missing BOM
     lines, benchmark error, spec differences, or commercial opportunity -
@@ -87,10 +99,11 @@ def unexplained_residual(
         return {"quoted_price": 0.0, "residual": 0.0, "residual_pct": 0.0, "quote_missing": 1.0}
     price = float(quote["base_unit_price"])
     sc = process_based_should_cost(data, product_id, supplier_id)
-    residual = price - sc["material"] - sc["conversion"]
+    residual = price - sc["ems_material"] - sc["conversion"]
     return {
         "quoted_price": price,
-        "identified_material": sc["material"],
+        "identified_material": sc["ems_material"],
+        "consigned_material_excluded": sc["consigned_material"],
         "estimated_conversion": sc["conversion"],
         "residual": residual,
         "residual_pct": residual / price * 100 if price else 0.0,
@@ -145,7 +158,7 @@ def variance_analysis(
 
     rows = [
         {"component": "Quoted unit price", "value": quoted},
-        {"component": "Should-cost (material + conversion)", "value": -sc["should_cost"]},
+        {"component": "Should-cost (EMS-scope material + conversion)", "value": -sc["should_cost"]},
         {"component": "Total variance", "value": variance},
         {"component": "Possible volume difference (tier gap)", "value": volume_component},
         {"component": "Likely commercial opportunity", "value": commercial},
@@ -176,6 +189,7 @@ def comparison_table(data: Dict[str, pd.DataFrame], product_id: str) -> pd.DataF
                 "supplier_name": suppliers.loc[sid, "supplier_name"] if sid in suppliers.index else sid,
                 "quoted_price": quoted,
                 "should_cost": sc["should_cost"],
+                "consigned_material": sc["consigned_material"],
                 "current_standard_cost": std_cost,
                 "variance_usd": quoted - sc["should_cost"],
                 "variance_pct": (quoted - sc["should_cost"]) / quoted * 100 if quoted else 0.0,

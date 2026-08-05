@@ -1,23 +1,23 @@
 inv_id,supplier_id,site_id,product_id,material_desc,stage,ownership,physical_location,accounting_entity,quantity,unit_cost,days_of_supply,aging_days,excess_flag,obsolescence_risk,liability_status,notes
-INV-001,SUP-ATL,SITE-ATL-GDL,P-100,Consigned FPGA and ADC components,Raw material,OEM,EMS site,Novatron US,1450,262.00,38,25,FALSE,Low,OEM-owned,Consigned long-lead semiconductors for P-100
-INV-002,SUP-ATL,SITE-ATL-GDL,P-100,EMS-procured PCB and passives,Raw material,EMS,EMS site,Atlas MX,2100,205.00,45,30,FALSE,Low,EMS-owned,
-INV-003,SUP-ATL,SITE-ATL-GDL,P-100,Mainboards in assembly,Work in process,EMS,EMS site,Atlas MX,620,690.00,18,10,FALSE,Low,EMS-owned,
-INV-004,SUP-ATL,SITE-ATL-GDL,P-100,Finished mainboards awaiting ship,Finished goods,EMS,EMS site,Atlas MX,380,842.00,11,6,FALSE,Low,EMS-owned,Title transfers at dock
-INV-005,,,P-100,Mainboards in transit to OEM,In transit,OEM,In transit,Novatron US,190,842.00,5,3,FALSE,Low,OEM-owned,FCA Guadalajara; OEM owns in transit
-INV-006,SUP-ATL,SITE-ATL-GDL,P-200,Consigned RF ICs and mixers,Raw material,OEM,EMS site,Novatron US,980,512.00,52,35,FALSE,Medium,OEM-owned,Strategic consigned RF silicon
-INV-007,SUP-ATL,SITE-ATL-GDL,P-200,Consigned RF shield carriers (SA-210),Raw material,OEM,EMS site,Novatron US,520,86.00,32,20,FALSE,Low,OEM-owned,Built by Pacific and consigned to Atlas
-INV-008,SUP-ATL,SITE-ATL-GDL,P-200,EMS-procured RF materials,Raw material,EMS,EMS site,Atlas MX,760,190.00,48,28,FALSE,Low,EMS-owned,
-INV-009,SUP-ATL,SITE-ATL-GDL,P-200,RF modules in assembly and cal,Work in process,EMS,EMS site,Atlas MX,260,1010.00,20,12,FALSE,Low,EMS-owned,
-INV-010,,,P-200,RF modules in transit,In transit,OEM,In transit,Novatron US,80,1238.00,6,3,FALSE,Low,OEM-owned,
-INV-011,SUP-MER,SITE-MER-PEN,P-300,Consigned raw material per contract practice,Raw material,OEM,EMS site,Novatron US,3900,148.00,62,44,FALSE,Medium,OEM-owned,Ownership inferred; contract ambiguous
-INV-012,SUP-MER,SITE-MER-PEN,P-300,PDUs in assembly,Work in process,EMS,EMS site,Meridian MY,540,240.00,22,14,FALSE,Low,EMS-owned,
-INV-013,SUP-MER,SITE-MER-PEN,P-300,OEM safety stock held at Meridian,Safety stock,OEM,EMS site,Novatron US,1120,312.00,45,30,FALSE,Medium,OEM-owned,OEM funds 45 days safety stock per contract
-INV-014,,,P-300,PDUs on the water,In transit,OEM,In transit,Novatron US,820,312.00,32,16,FALSE,Low,OEM-owned,FOB Penang; OEM owns 32-day ocean pipeline
-INV-015,SUP-MER,SITE-MER-PEN,P-300,NCNR excess from demand cut,Noncancelable/nonreturnable,OEM,EMS site,Novatron US,650,148.00,180,150,TRUE,High,OEM liable,Authorized material inside 90-day window; demand dropped
-INV-016,SUP-PAC,SITE-PAC-KAO,P-400,EMS-owned raw and WIP,Raw material,EMS,EMS site,Pacific TW,2400,215.00,50,32,FALSE,Low,EMS-owned,Pacific funds material until FG transfer
-INV-017,SUP-PAC,SITE-PAC-KAO,P-400,Interface boards finished,Finished goods,EMS,EMS site,Pacific TW,420,505.00,17,8,FALSE,Low,EMS-owned,
-INV-018,,,P-400,Interface boards in transit,In transit,OEM,In transit,Novatron US,380,505.00,21,10,FALSE,Low,OEM-owned,FOB Kaohsiung
-INV-019,SUP-PAC,SITE-PAC-KAO,SA-210,Carrier subassemblies for consignment,Finished goods,EMS,EMS site,Pacific TW,310,86.00,24,12,FALSE,Low,EMS-owned,Ships to Atlas as consigned material
-INV-020,,,P-100,OEM finished-goods buffer at OEM DC,Finished goods,OEM,OEM site,Novatron US,450,842.00,13,7,FALSE,Low,OEM-owned,
-INV-021,,,P-400,Last-time-buy legacy ASIC stock,Last-time-buy,OEM,OEM site,Novatron US,900,61.40,240,120,FALSE,High,OEM-owned,LTB for legacy interface ASIC revision
-INV-022,SUP-ATL,SITE-ATL-GDL,SA-110,Power supply components,Raw material,EMS,EMS site,Atlas MX,1800,52.00,40,22,FALSE,Low,EMS-owned,
+INV-001,SUP-ATL,SITE-ATL-GDL,P-100,Consigned pin-electronics & timing ASICs,Raw material,OEM,EMS site,Novatron US,4200,340.00,60,35,FALSE,Medium,OEM-owned,Strategic consigned ASIC stock for channel cards
+INV-002,SUP-ATL,SITE-ATL-GDL,P-100,EMS-procured material sets (PCB DACs kits),Raw material,EMS,EMS site,Atlas MX,380,7030.00,55,30,FALSE,Low,EMS-owned,
+INV-003,SUP-ATL,SITE-ATL-GDL,P-100,Channel cards in assembly & correlation,Work in process,EMS,EMS site,Atlas MX,95,9200.00,19,10,FALSE,Low,EMS-owned,
+INV-004,SUP-ATL,SITE-ATL-GDL,P-100,Finished channel cards awaiting ship,Finished goods,EMS,EMS site,Atlas MX,60,11050.00,12,6,FALSE,Low,EMS-owned,Title transfers at dock (FCA Guadalajara)
+INV-005,,,P-100,Channel cards in transit to OEM,In transit,OEM,In transit,Novatron US,28,11050.00,5,3,FALSE,Low,OEM-owned,FCA Guadalajara; OEM owns in transit
+INV-006,SUP-ATL,SITE-ATL-GDL,P-200,Consigned mmWave MMIC & LO/mixer sets,Raw material,OEM,EMS site,Novatron US,95,14500.00,77,40,FALSE,Medium,OEM-owned,Strategic buffer against 200-day silicon lead time
+INV-007,SUP-ATL,SITE-ATL-GDL,P-200,Consigned mmWave carriers (SA-210),Raw material,OEM,EMS site,Novatron US,70,1850.00,57,25,FALSE,Low,OEM-owned,Built by Pacific and consigned to Atlas
+INV-008,SUP-ATL,SITE-ATL-GDL,P-200,EMS-procured RF material sets,Raw material,EMS,EMS site,Atlas MX,55,5940.00,45,26,FALSE,Low,EMS-owned,
+INV-009,SUP-ATL,SITE-ATL-GDL,P-200,mmWave modules in assembly & cal,Work in process,EMS,EMS site,Atlas MX,22,10500.00,18,10,FALSE,Low,EMS-owned,
+INV-010,,,P-200,mmWave modules in transit,In transit,OEM,In transit,Novatron US,8,12600.00,6,3,FALSE,Low,OEM-owned,
+INV-011,SUP-MER,SITE-MER-PEN,P-300,Consigned raw material per contract practice,Raw material,OEM,EMS site,Novatron US,720,2960.00,73,45,FALSE,Medium,OEM-owned,Ownership inferred; contract ambiguous
+INV-012,SUP-MER,SITE-MER-PEN,P-300,DPS modules in assembly,Work in process,EMS,EMS site,Meridian MY,130,3400.00,13,8,FALSE,Low,EMS-owned,
+INV-013,SUP-MER,SITE-MER-PEN,P-300,OEM safety stock held at Meridian,Safety stock,OEM,EMS site,Novatron US,445,4150.00,45,30,FALSE,Medium,OEM-owned,OEM funds 45 days of safety stock per contract
+INV-014,,,P-300,DPS modules on the water,In transit,OEM,In transit,Novatron US,315,4150.00,32,16,FALSE,Low,OEM-owned,FOB Penang; OEM owns the 32-day ocean pipeline
+INV-015,SUP-MER,SITE-MER-PEN,P-300,NCNR excess from demand cut,Noncancelable/nonreturnable,OEM,EMS site,Novatron US,265,2960.00,180,150,TRUE,High,OEM liable,Authorized material inside the 90-day window; demand dropped
+INV-016,SUP-PAC,SITE-PAC-KAO,P-400,EMS-owned raw material and kits,Raw material,EMS,EMS site,Pacific TW,210,5770.00,64,35,FALSE,Low,EMS-owned,Pacific funds material until FG transfer
+INV-017,SUP-PAC,SITE-PAC-KAO,P-400,Finished interface boards,Finished goods,EMS,EMS site,Pacific TW,55,7800.00,17,8,FALSE,Low,EMS-owned,
+INV-018,,,P-400,Interface boards in transit,In transit,OEM,In transit,Novatron US,70,7800.00,21,10,FALSE,Low,OEM-owned,FOB Kaohsiung
+INV-019,SUP-PAC,SITE-PAC-KAO,SA-210,Carrier subassemblies staged for consignment,Finished goods,EMS,EMS site,Pacific TW,40,1850.00,32,12,FALSE,Low,EMS-owned,Ships to Atlas as consigned material
+INV-020,,,P-100,OEM finished-goods buffer at OEM DC,Finished goods,OEM,OEM site,Novatron US,85,11050.00,17,7,FALSE,Low,OEM-owned,
+INV-021,,,P-400,Last-time-buy legacy interface ASIC stock,Last-time-buy,OEM,OEM site,Novatron US,2600,310.00,240,120,FALSE,High,OEM-owned,LTB for legacy DIB ASIC revision
+INV-022,SUP-ATL,SITE-ATL-GDL,SA-110,Power-stage component sets,Raw material,EMS,EMS site,Atlas MX,260,1720.00,53,24,FALSE,Low,EMS-owned,

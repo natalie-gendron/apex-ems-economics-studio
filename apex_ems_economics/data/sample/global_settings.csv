@@ -10,7 +10,7 @@ payment_terms_reference_days,30,days,Reference payment terms; financing benefit 
 oem_share_when_oem_responsible_pct,100,%,OEM-borne share of a quality cost when OEM is contractually responsible
 oem_share_when_shared_pct,50,%,OEM-borne share of a quality cost when responsibility is shared
 oem_share_when_ems_responsible_pct,20,%,Residual OEM-borne share (disruption and friction) when EMS is contractually responsible
-field_repair_cost_multiplier,2.5,x,Field-failure cost per event as a multiple of unit price
+field_repair_cost_multiplier,1.5,x,Field-failure cost per event as a multiple of unit price (ATE boards are repaired and recalibrated rather than replaced)
 mc_default_iterations,500,runs,Default Monte Carlo iteration count
 mc_default_seed,42,seed,Default Monte Carlo random seed for reproducibility
 gross_margin_reference_pct,54,%,Portfolio average gross margin used for lost-margin estimates

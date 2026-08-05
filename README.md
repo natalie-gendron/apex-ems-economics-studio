@@ -6,7 +6,9 @@ assumptions into a deterministic, auditable economic decision model.
 
 The central lesson the model demonstrates: **the lowest-quote supplier is not the
 lowest-total-economic-cost supplier** once logistics, duties, quality, working capital,
-service, and risk are priced onto the same axis.
+service, and risk are priced onto the same axis. The sample data models a fictional ATE
+(automated test equipment) maker: $10K–$30K instrument boards at 450–3,600 units/yr,
+consigned strategic silicon, and golden-tester correlation in conversion cost.
 
 - **Application code and full documentation:** [`apex_ems_economics/`](apex_ems_economics/README.md)
 - **Original build specification:** [`initial_prompt.md`](initial_prompt.md)

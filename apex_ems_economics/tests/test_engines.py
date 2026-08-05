@@ -31,12 +31,12 @@ def baseline(data, settings):
 # ---------------------------------------------------------------- material
 def test_material_cost_positive_and_split(data):
     mc = material_cost_per_unit(data, "P-100")
-    assert mc["bom_lines"] == 9
+    assert mc["bom_lines"] == 10
     assert mc["material_total"] > 0
     # Consigned (OEM-owned models) + EMS-procured must equal the total.
     assert mc["consigned_material"] + mc["ems_material"] == pytest.approx(mc["material_total"])
-    # P-100 consigns FPGA + ADCs: consigned share must be substantial.
-    assert mc["consigned_material"] > 200
+    # P-100 consigns pin-electronics + timing ASICs: consigned share is large.
+    assert mc["consigned_material"] > 5000
 
 
 def test_material_cost_scrap_yield_adjustments():
@@ -55,8 +55,8 @@ def test_conversion_cost_components(data):
     mc = material_cost_per_unit(data, "P-100")
     conv = conversion_cost_per_unit(data, "P-100", "SUP-ATL", mc["material_total"])
     assert conv["conversion_missing"] == 0
-    assert conv["direct_labor"] == pytest.approx(1.9 * 9.50)
-    assert conv["burdened_labor"] == pytest.approx(1.9 * 9.50 * 1.42)
+    assert conv["direct_labor"] == pytest.approx(14 * 9.50)
+    assert conv["burdened_labor"] == pytest.approx(14 * 9.50 * 1.42)
     assert conv["conversion_total"] > conv["burdened_labor"]
     # Margin applies last and must be positive.
     assert conv["supplier_margin"] > 0
@@ -65,21 +65,21 @@ def test_conversion_cost_components(data):
 # ---------------------------------------------------------------- tier pricing
 def test_volume_tier_pricing(data):
     quote = get_quote(data, "SUP-ATL", "P-100")
-    assert tier_unit_price(quote, 5000) == 842      # below tier 2
-    assert tier_unit_price(quote, 12000) == 828     # tier 2
-    assert tier_unit_price(quote, 20000) == 815     # tier 3
+    assert tier_unit_price(quote, 1000) == 11400    # below tier 2
+    assert tier_unit_price(quote, 1800) == 11050    # tier 2 (>= 1500)
+    assert tier_unit_price(quote, 3000) == 10750    # tier 3 (>= 2400)
 
 
 # ---------------------------------------------------------------- quality
 def test_quality_copq_and_good_units(data, settings):
     q = quality_engine.get_quality_row(data, "SUP-MER", "P-100")
-    result = quality_engine.copq(q, volume=1000, unit_price=785.0, settings=settings)
-    assert result["good_units"] == pytest.approx(1000 * 0.976)
+    result = quality_engine.copq(q, volume=1000, unit_price=10100.0, settings=settings)
+    assert result["good_units"] == pytest.approx(1000 * 0.964)
     assert result["total_copq"] > 0
     # OEM-borne can never exceed total.
     assert result["oem_copq"] <= result["total_copq"] + 1e-6
     # Expected recall = probability x impact x share.
-    assert result["expected_recall_cost"] == pytest.approx(0.008 * 1_500_000)
+    assert result["expected_recall_cost"] == pytest.approx(0.008 * 6_000_000)
 
 
 def test_quality_responsibility_shifts_oem_share(data, settings):
@@ -90,8 +90,8 @@ def test_quality_responsibility_shifts_oem_share(data, settings):
     modified["scrap_responsibility"] = "OEM"
     modified["rework_responsibility"] = "OEM"
     modified["warranty_responsibility"] = "OEM"
-    ems_borne = quality_engine.copq(atl, 1000, 842.0, settings)["oem_copq"]
-    oem_borne = quality_engine.copq(modified, 1000, 842.0, settings)["oem_copq"]
+    ems_borne = quality_engine.copq(atl, 1000, 11050.0, settings)["oem_copq"]
+    oem_borne = quality_engine.copq(modified, 1000, 11050.0, settings)["oem_copq"]
     assert oem_borne > ems_borne
 
 
@@ -174,7 +174,7 @@ def test_material_conversion_not_added_to_total(baseline):
 def test_good_units_account_for_yield(baseline):
     li = baseline.line_items
     row = li[(li["product_id"] == "P-100") & (li["supplier_id"] == "SUP-ATL")].iloc[0]
-    assert row["good_units"] == pytest.approx(row["volume"] * 0.993)
+    assert row["good_units"] == pytest.approx(row["volume"] * 0.986)
     assert row["econ_cost_per_unit"] > row["total_economic_cost"] / row["volume"]
 
 
@@ -186,7 +186,7 @@ def test_scenario_overrides_applied(data):
     assert float(pay["value"]) == 75.0
     quotes = patched["supplier_quotes"]
     q = quotes[quotes["quote_id"] == "Q-ATL-P100"].iloc[0]
-    assert q["base_unit_price"] == pytest.approx(842 * 1.006)
+    assert q["base_unit_price"] == pytest.approx(11400 * 1.006)
 
 
 def test_inventory_ownership_conversion_override(data):
@@ -195,8 +195,9 @@ def test_inventory_ownership_conversion_override(data):
     original = inv[inv["inv_id"] == "INV-001"].iloc[0]
     converted = inv[inv["inv_id"] == "INV-001-EMS"]
     assert not converted.empty
-    assert float(original["quantity"]) == pytest.approx(1450 * 0.4)
-    assert float(converted.iloc[0]["quantity"]) == pytest.approx(1450 * 0.6)
+    # 40% of the consigned pool converts to EMS ownership in SCN-003.
+    assert float(original["quantity"]) == pytest.approx(4200 * 0.6)
+    assert float(converted.iloc[0]["quantity"]) == pytest.approx(4200 * 0.4)
     assert converted.iloc[0]["ownership"] == "EMS"
 
 
@@ -222,10 +223,13 @@ def test_end_to_end_sample_scenarios(data, settings):
             < base.totals["oem_inventory_value"] * 0.95)
     assert results["SCN-003"].totals["wc_cost"] < base.totals["wc_cost"]
 
-    # 3) Dual-source scenario (SCN-004) costs more recurring but cuts expected risk.
+    # 3) Dual-source scenario (SCN-004): running cost excluding risk is higher
+    #    (the insurance premium), paid for by a large expected-risk reduction.
     assert results["SCN-004"].totals["risk_cost"] < base.totals["risk_cost"] - 100_000
-    assert (results["SCN-004"].totals["recurring_economic_cost"]
-            > base.totals["recurring_economic_cost"] - 50_000)
+    ex_risk_scn4 = (results["SCN-004"].totals["recurring_economic_cost"]
+                    - results["SCN-004"].totals["risk_cost"])
+    ex_risk_base = base.totals["recurring_economic_cost"] - base.totals["risk_cost"]
+    assert ex_risk_scn4 > ex_risk_base
 
     # 4) Bridge reconciles to per-unit economic cost.
     bridge = cost_bridge(base)

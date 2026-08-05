@@ -130,12 +130,28 @@ def _apply_override(patched: Dict[str, pd.DataFrame], ovr: pd.Series) -> None:
 
     if field not in df.columns:
         return
-    if pd.api.types.is_numeric_dtype(df[field]) and not pd.api.types.is_float_dtype(df[field]):
+    is_numeric_col = pd.api.types.is_numeric_dtype(df[field])
+    if is_numeric_col and not pd.api.types.is_float_dtype(df[field]):
         df[field] = df[field].astype(float)
     current = pd.to_numeric(df.loc[mask, field], errors="coerce")
     if change_type == "absolute":
-        df.loc[mask, field] = value
+        new_values: object = value
     elif change_type == "multiplier":
-        df.loc[mask, field] = current * value
+        new_values = current * value
     elif change_type == "delta":
-        df.loc[mask, field] = current + value
+        new_values = current + value
+    else:
+        return
+    if is_numeric_col:
+        df.loc[mask, field] = new_values
+    else:
+        # Mixed text columns (e.g. contract_terms.value) are string-dtyped under
+        # pandas >= 3, which rejects numeric assignment - write numbers as text.
+        if isinstance(new_values, pd.Series):
+            df.loc[mask, field] = new_values.map(_number_as_text)
+        else:
+            df.loc[mask, field] = _number_as_text(new_values)
+
+
+def _number_as_text(value: float) -> str:
+    return str(int(value)) if float(value).is_integer() else str(value)

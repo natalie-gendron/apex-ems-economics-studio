@@ -1,0 +1,5 @@
+lane_id,supplier_id,site_id,origin,destination,incoterms,freight_mode,freight_cost_per_unit,expedite_freight_cost_per_unit,expedite_frequency_pct,insurance_pct,brokerage_per_shipment,shipments_per_month,units_per_shipment,duty_rate_pct,tariff_rate_pct,packaging_cost_per_unit,handling_cost_per_unit,warehousing_cost_per_unit,transit_days,freight_paid_by,confidence,notes
+LANE-ATL-GDL,SUP-ATL,SITE-ATL-GDL,Guadalajara MX,Boston MA,FCA,Truck,6.20,18.00,2,0.15,120,8,150,0,0,1.10,0.80,0.60,5,OEM,High,USMCA duty-free; 5-day ground
+LANE-ATL-AUS,SUP-ATL,SITE-ATL-AUS,Austin TX,Boston MA,FCA,Truck,4.10,12.00,1,0.10,0,4,80,0,0,0.90,0.70,0.50,3,OEM,High,Domestic lane
+LANE-MER-PEN,SUP-MER,SITE-MER-PEN,Penang MY,Boston MA,FOB,Ocean,17.50,62.00,9,0.25,240,4,300,0,4.5,1.40,1.10,1.20,32,OEM,Medium,Tariff exposure on subset of HTS codes; frequent air expedites
+LANE-PAC-KAO,SUP-PAC,SITE-PAC-KAO,Kaohsiung TW,Boston MA,FOB,Ocean + air mix,13.80,48.00,4,0.22,210,5,240,0,2.0,1.25,0.95,0.90,21,OEM,High,

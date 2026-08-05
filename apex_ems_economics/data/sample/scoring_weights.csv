@@ -1,0 +1,11 @@
+dimension,weight_pct,description
+Economic cost,30,Total economic cost per unit versus peers
+Quality,12,First-pass yield and cost of poor quality
+Delivery,8,On-time delivery performance versus commitment
+Service,8,Lead time; flexibility; recovery capability
+Capacity,8,Headroom and expansion capability
+Flexibility,6,Upside and downside volume flexibility
+Working capital,10,Inventory ownership terms; payment terms; liability windows
+Risk,10,Expected risk cost and mitigation posture
+Data transparency,4,Cost visibility; audit rights; quote support
+Strategic fit,4,Alignment with technology roadmap and footprint strategy

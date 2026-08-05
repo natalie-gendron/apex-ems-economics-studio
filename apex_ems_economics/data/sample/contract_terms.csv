@@ -1,0 +1,77 @@
+term_id,supplier_id,category,term_name,value,unit,status,source_reference,confidence,notes
+CT-ATL-PAY,SUP-ATL,Inventory & liability,payment_terms_days,45,days,Confirmed,MSA 2024 section 8.2,High,Net 45 from invoice
+CT-ATL-ADV,SUP-ATL,Inventory & liability,advance_payment_pct,0,%,Confirmed,MSA 2024 section 8.3,High,No advance payments required
+CT-ATL-RAW,SUP-ATL,Inventory & liability,raw_material_ownership,OEM-owned consigned to EMS,,Confirmed,MSA 2024 exhibit C,High,Critical RF and long-lead components consigned by OEM
+CT-ATL-WIP,SUP-ATL,Inventory & liability,wip_ownership,EMS,,Confirmed,MSA 2024 exhibit C,High,
+CT-ATL-FG,SUP-ATL,Inventory & liability,fg_ownership,EMS until shipment,,Confirmed,MSA 2024 exhibit C,High,Title transfers at dock (FCA Guadalajara)
+CT-ATL-TTL,SUP-ATL,Inventory & liability,title_transfer_point,FCA origin dock,,Confirmed,MSA 2024 exhibit C,High,
+CT-ATL-MAW,SUP-ATL,Inventory & liability,material_authorization_window_days,60,days,Confirmed,MSA 2024 section 6.4,High,
+CT-ATL-NCNR,SUP-ATL,Inventory & liability,ncnr_liability_window_days,60,days,Confirmed,MSA 2024 section 6.5,High,
+CT-ATL-EXC,SUP-ATL,Inventory & liability,excess_material_liability,OEM liable beyond 60-day window,,Confirmed,MSA 2024 section 6.5,High,
+CT-ATL-SS,SUP-ATL,Inventory & liability,safety_stock_ownership,EMS,,Confirmed,MSA 2024 section 6.7,High,EMS funds 15 days safety stock
+CT-ATL-EOL,SUP-ATL,Inventory & liability,end_of_life_liability,Shared per exhibit D,,Estimated,MSA 2024 exhibit D,Medium,
+CT-ATL-APR,SUP-ATL,Pricing,annual_productivity_pct,2.0,%,Confirmed,MSA 2024 section 5.6,High,Annual price reduction commitment
+CT-ATL-OB,SUP-ATL,Cost transparency,pricing_transparency,Partial open-book,,Confirmed,MSA 2024 section 5.9,High,Material breakdown provided; labor and overhead partially visible
+CT-ATL-AUD,SUP-ATL,Cost transparency,audit_rights,Annual cost audit permitted,,Confirmed,MSA 2024 section 5.10,High,
+CT-ATL-OTD,SUP-ATL,Service,required_otd_pct,95,%,Confirmed,MSA 2024 SLA,High,
+CT-ATL-LT,SUP-ATL,Service,required_lead_time_days,20,days,Confirmed,MSA 2024 SLA,High,
+CT-ATL-FLEX,SUP-ATL,Service,upside_flexibility_pct,25,%,Confirmed,MSA 2024 SLA,High,25% upside within lead time
+CT-ATL-PF,SUP-ATL,Service,premium_freight_responsibility,EMS when caused by EMS,,Confirmed,MSA 2024 SLA,High,
+CT-ATL-YLD,SUP-ATL,Quality,first_pass_yield_commitment_pct,96,%,Confirmed,Quality agreement 2024,High,
+CT-ATL-RWK,SUP-ATL,Quality,rework_responsibility,EMS,,Confirmed,Quality agreement 2024,High,
+CT-ATL-SCR,SUP-ATL,Quality,scrap_responsibility,EMS,,Confirmed,Quality agreement 2024,High,EMS bears scrap above 0.5% baseline
+CT-ATL-WAR,SUP-ATL,Quality,warranty_responsibility,Shared,,Confirmed,Quality agreement 2024,High,Workmanship EMS; design OEM
+CT-ATL-TRM,SUP-ATL,Contract risk,termination_notice_days,180,days,Confirmed,MSA 2024 section 12,High,
+CT-ATL-TOOL,SUP-ATL,Contract risk,tooling_ownership,OEM,,Confirmed,MSA 2024 section 9,High,
+CT-ATL-MINV,SUP-ATL,Volume,minimum_annual_volume_units,0,units,Confirmed,MSA 2024,High,No minimum volume commitment
+CT-MER-PAY,SUP-MER,Inventory & liability,payment_terms_days,30,days,Confirmed,Supply agreement 2023 section 7,High,Net 30
+CT-MER-ADV,SUP-MER,Inventory & liability,advance_payment_pct,10,%,Confirmed,Supply agreement 2023 section 7.2,High,10% deposit on orders above MOQ
+CT-MER-RAW,SUP-MER,Inventory & liability,raw_material_ownership,OEM-owned consigned to EMS,,Inferred,Buyer interviews,Low,Contract text ambiguous; treated as OEM-consigned based on practice
+CT-MER-WIP,SUP-MER,Inventory & liability,wip_ownership,EMS,,Inferred,Buyer interviews,Low,
+CT-MER-FG,SUP-MER,Inventory & liability,fg_ownership,OEM at origin port,,Confirmed,Supply agreement 2023,Medium,FOB Penang; OEM owns goods in transit
+CT-MER-TTL,SUP-MER,Inventory & liability,title_transfer_point,FOB origin port,,Confirmed,Supply agreement 2023,High,
+CT-MER-MAW,SUP-MER,Inventory & liability,material_authorization_window_days,90,days,Confirmed,Supply agreement 2023 section 5.3,High,Long authorization window increases liability
+CT-MER-NCNR,SUP-MER,Inventory & liability,ncnr_liability_window_days,90,days,Confirmed,Supply agreement 2023 section 5.4,High,
+CT-MER-EXC,SUP-MER,Inventory & liability,excess_material_liability,OEM liable for all authorized material,,Confirmed,Supply agreement 2023 section 5.4,High,Aggressive liability terms
+CT-MER-SS,SUP-MER,Inventory & liability,safety_stock_ownership,OEM,,Confirmed,Supply agreement 2023 section 5.6,High,OEM funds 45 days safety stock
+CT-MER-EOL,SUP-MER,Inventory & liability,end_of_life_liability,Missing,,Missing,,Low,Not addressed in contract; flagged for renegotiation
+CT-MER-APR,SUP-MER,Pricing,annual_productivity_pct,1.0,%,Confirmed,Supply agreement 2023 section 4.5,High,
+CT-MER-OB,SUP-MER,Cost transparency,pricing_transparency,Bundled pricing,,Confirmed,Supply agreement 2023,High,No material or labor breakdown provided
+CT-MER-AUD,SUP-MER,Cost transparency,audit_rights,None,,Confirmed,Supply agreement 2023,High,No audit rights
+CT-MER-OTD,SUP-MER,Service,required_otd_pct,95,%,Confirmed,Supply agreement 2023 SLA,High,Actual performance 90.5%
+CT-MER-LT,SUP-MER,Service,required_lead_time_days,45,days,Confirmed,Supply agreement 2023 SLA,High,
+CT-MER-FLEX,SUP-MER,Service,upside_flexibility_pct,10,%,Confirmed,Supply agreement 2023 SLA,High,
+CT-MER-PF,SUP-MER,Service,premium_freight_responsibility,OEM,,Confirmed,Supply agreement 2023 SLA,High,OEM pays expedite freight regardless of cause
+CT-MER-YLD,SUP-MER,Quality,first_pass_yield_commitment_pct,Missing,%,Missing,,Low,No yield commitment in contract
+CT-MER-RWK,SUP-MER,Quality,rework_responsibility,OEM,,Inferred,Claims history,Medium,OEM has absorbed rework charges historically
+CT-MER-SCR,SUP-MER,Quality,scrap_responsibility,Shared,,Estimated,Claims history,Medium,
+CT-MER-WAR,SUP-MER,Quality,warranty_responsibility,OEM,,Inferred,Claims history,Low,Warranty responsibility not defined; OEM absorbing
+CT-MER-TRM,SUP-MER,Contract risk,termination_notice_days,90,days,Confirmed,Supply agreement 2023 section 11,High,
+CT-MER-TOOL,SUP-MER,Contract risk,tooling_ownership,EMS,,Confirmed,Supply agreement 2023 section 8,High,EMS owns test fixtures; increases switching cost
+CT-MER-MINV,SUP-MER,Volume,minimum_annual_volume_units,7500,units,Confirmed,Supply agreement 2023 section 3.2,High,Take-or-pay style minimum on P-300
+CT-PAC-PAY,SUP-PAC,Inventory & liability,payment_terms_days,75,days,Confirmed,MSA 2024 section 8,High,Net 75; best-in-class terms
+CT-PAC-ADV,SUP-PAC,Inventory & liability,advance_payment_pct,0,%,Confirmed,MSA 2024 section 8,High,
+CT-PAC-RAW,SUP-PAC,Inventory & liability,raw_material_ownership,EMS-owned until finished-goods transfer,,Confirmed,MSA 2024 exhibit B,High,Pacific funds all material until FG ships
+CT-PAC-WIP,SUP-PAC,Inventory & liability,wip_ownership,EMS,,Confirmed,MSA 2024 exhibit B,High,
+CT-PAC-FG,SUP-PAC,Inventory & liability,fg_ownership,OEM at origin port,,Confirmed,MSA 2024 exhibit B,High,FOB Kaohsiung
+CT-PAC-TTL,SUP-PAC,Inventory & liability,title_transfer_point,FOB origin port,,Confirmed,MSA 2024 exhibit B,High,
+CT-PAC-MAW,SUP-PAC,Inventory & liability,material_authorization_window_days,45,days,Confirmed,MSA 2024 section 6,High,
+CT-PAC-NCNR,SUP-PAC,Inventory & liability,ncnr_liability_window_days,45,days,Confirmed,MSA 2024 section 6,High,
+CT-PAC-EXC,SUP-PAC,Inventory & liability,excess_material_liability,EMS absorbs first 30 days of excess,,Confirmed,MSA 2024 section 6,High,
+CT-PAC-SS,SUP-PAC,Inventory & liability,safety_stock_ownership,EMS,,Confirmed,MSA 2024 section 6,High,EMS funds 25 days safety stock
+CT-PAC-FIN,SUP-PAC,Inventory & liability,inventory_financing_fee_pct,0.8,%,Confirmed,MSA 2024 section 8.4,High,Financing fee embedded for extended ownership terms
+CT-PAC-EOL,SUP-PAC,Inventory & liability,end_of_life_liability,EMS-led last-time-buy with OEM approval,,Confirmed,MSA 2024 exhibit D,High,
+CT-PAC-APR,SUP-PAC,Pricing,annual_productivity_pct,2.5,%,Confirmed,MSA 2024 section 5,High,
+CT-PAC-OB,SUP-PAC,Cost transparency,pricing_transparency,Partial open-book,,Confirmed,MSA 2024 section 5,High,
+CT-PAC-AUD,SUP-PAC,Cost transparency,audit_rights,Biennial audit permitted,,Confirmed,MSA 2024 section 5,High,
+CT-PAC-OTD,SUP-PAC,Service,required_otd_pct,95,%,Confirmed,MSA 2024 SLA,High,
+CT-PAC-LT,SUP-PAC,Service,required_lead_time_days,30,days,Confirmed,MSA 2024 SLA,High,
+CT-PAC-FLEX,SUP-PAC,Service,upside_flexibility_pct,20,%,Confirmed,MSA 2024 SLA,High,
+CT-PAC-PF,SUP-PAC,Service,premium_freight_responsibility,Shared 50/50,,Confirmed,MSA 2024 SLA,High,
+CT-PAC-YLD,SUP-PAC,Quality,first_pass_yield_commitment_pct,95,%,Confirmed,Quality agreement 2024,High,
+CT-PAC-RWK,SUP-PAC,Quality,rework_responsibility,EMS,,Confirmed,Quality agreement 2024,High,
+CT-PAC-SCR,SUP-PAC,Quality,scrap_responsibility,EMS,,Confirmed,Quality agreement 2024,High,
+CT-PAC-WAR,SUP-PAC,Quality,warranty_responsibility,Shared,,Confirmed,Quality agreement 2024,High,
+CT-PAC-TRM,SUP-PAC,Contract risk,termination_notice_days,120,days,Confirmed,MSA 2024 section 12,High,
+CT-PAC-TOOL,SUP-PAC,Contract risk,tooling_ownership,OEM,,Confirmed,MSA 2024 section 9,High,
+CT-PAC-MINV,SUP-PAC,Volume,minimum_annual_volume_units,0,units,Confirmed,MSA 2024,High,No minimum commitment

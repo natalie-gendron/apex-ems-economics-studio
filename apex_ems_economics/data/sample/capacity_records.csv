@@ -1,0 +1,5 @@
+site_id,supplier_id,available_capacity_units,committed_capacity_units,utilization_pct,max_utilization_pct,overtime_capacity_units,expansion_capacity_units,expansion_lead_time_months,reserved_capacity_units,reservation_fee_annual,min_economic_volume,max_feasible_volume,ramp_rate_units_per_month,transfer_lead_time_weeks,qualification_lead_time_weeks,constraint_notes
+SITE-ATL-GDL,SUP-ATL,40000,29600,74,90,4000,12000,9,6000,180000,5000,44000,1500,16,12,Test capacity is the binding constraint for P-200 RF calibration
+SITE-ATL-AUS,SUP-ATL,8000,3200,40,85,1000,4000,6,0,0,500,9000,400,8,8,NPI center; not sized for volume production
+SITE-MER-PEN,SUP-MER,55000,38500,70,92,6000,20000,12,0,0,8000,61000,2500,20,16,Labor availability tightens in Q4; high-mix changeover losses
+SITE-PAC-KAO,SUP-PAC,30000,24900,83,90,2500,8000,10,4000,120000,4000,32500,1200,18,14,Running close to max utilization; expansion decision pending

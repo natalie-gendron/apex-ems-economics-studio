@@ -1,0 +1,5 @@
+scenario_id,scenario_name,description,is_baseline,demand_multiplier,one_time_cost,transition_cost,status,created_date,notes
+SCN-001,Current State,Baseline allocation and contract terms as of Q3 FY26,TRUE,1.0,0,0,Active,2026-07-01,Reference case for all comparisons
+SCN-002,Shift 25% of P-100 to Meridian,Move 25% of mainboard volume to the lowest-quote supplier,FALSE,1.0,150000,220000,Draft,2026-07-10,Qualification plus dual-ramp cost; quote savings partly offset by landed cost and quality
+SCN-003,Renegotiate Atlas Inventory & Payment Terms,Extend Atlas payment terms from 45 to 75 days and convert OEM-consigned raw material to EMS-owned until consumption in exchange for a 0.6% price concession,FALSE,1.0,0,40000,Draft,2026-07-12,Cash-focused renegotiation; small price concession assumed
+SCN-004,Dual-Source RF Front-End (P-200),Qualify Pacific Integrated Systems as a second source for P-200 at 30% of volume,FALSE,1.0,320000,180000,Draft,2026-07-15,Reduces single-source risk; slightly higher run-rate cost

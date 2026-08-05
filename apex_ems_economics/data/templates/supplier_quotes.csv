@@ -1,0 +1,1 @@
+quote_id,supplier_id,product_id,base_unit_price,currency,price_effective_date,tier2_min_qty,tier2_unit_price,tier3_min_qty,tier3_unit_price,quoted_material_content,quoted_conversion_content,includes_freight,includes_duties,annual_price_reduction_pct,quote_source,status,confidence,valid_until,notes

@@ -1,0 +1,4 @@
+supplier_id,supplier_name,status,strategic_importance,financial_health,capacity_rating,quality_rating,delivery_rating,responsiveness_rating,single_source_risk,alternate_source_availability,transition_lead_time_weeks,data_transparency,strategic_fit,notes,created_date,updated_date
+SUP-ATL,Atlas Manufacturing Services,Approved,High,4,4,5,5,4,Medium,Good,16,Partial open-book,High,"Primary partner for complex boards; strong quality and service; near-shore to US operations",2025-11-01,2026-07-15
+SUP-MER,Meridian Electronics,Approved,Medium,3,4,3,3,3,High,Limited,20,Bundled pricing,Medium,"Lowest quoted prices; long ocean supply chain; limited cost transparency; chronic delivery misses",2025-11-01,2026-07-15
+SUP-PAC,Pacific Integrated Systems,Approved,High,4,3,4,4,4,Medium,Good,18,Partial open-book,High,"Favorable inventory ownership and payment terms; strong high-mix capability; typhoon/earthquake exposure",2025-11-01,2026-07-15

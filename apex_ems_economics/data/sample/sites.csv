@@ -1,0 +1,5 @@
+site_id,supplier_id,site_name,country,region,currency,contract_start,contract_end,geographic_risk,political_risk,natural_disaster_risk,notes
+SITE-ATL-GDL,SUP-ATL,Atlas Guadalajara,Mexico,Americas,USD,2024-01-01,2027-12-31,Low,Low,Low,USMCA qualified; 5-day ground transit to OEM
+SITE-ATL-AUS,SUP-ATL,Atlas Austin,United States,Americas,USD,2024-01-01,2027-12-31,Low,Low,Low,NPI and low-volume high-mix center
+SITE-MER-PEN,SUP-MER,Meridian Penang,Malaysia,APAC,USD,2023-07-01,2026-06-30,Medium,Medium,Medium,Ocean freight 32-day transit; air expedite available; contract expires mid-2026
+SITE-PAC-KAO,SUP-PAC,Pacific Kaohsiung,Taiwan,APAC,USD,2024-06-01,2027-05-31,Medium,Medium,High,Earthquake and typhoon exposure; strong logistics infrastructure

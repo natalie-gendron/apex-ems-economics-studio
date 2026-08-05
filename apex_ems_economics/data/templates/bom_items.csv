@@ -1,0 +1,1 @@
+bom_id,product_id,component,category,qty_per,unit_price,currency,price_source,component_supplier,commodity_index,lead_time_days,moq,order_multiple,scrap_pct,yield_pct,freight_pct,duty_pct,ownership_model,physical_location,purchase_responsibility,price_valid_until,confidence,notes

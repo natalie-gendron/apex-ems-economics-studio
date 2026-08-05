@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local AI tooling
+.claude/
+.agents/
+.streamlit/

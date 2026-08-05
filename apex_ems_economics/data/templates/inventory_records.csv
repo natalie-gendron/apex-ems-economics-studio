@@ -1,0 +1,1 @@
+inv_id,supplier_id,site_id,product_id,material_desc,stage,ownership,physical_location,accounting_entity,quantity,unit_cost,days_of_supply,aging_days,excess_flag,obsolescence_risk,liability_status,notes

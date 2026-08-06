@@ -72,10 +72,41 @@ st.caption(
     "always created as **Inferred / Low confidence** drafts.")
 pasted = st.text_area("Contract text", height=180, placeholder="Paste contract excerpt here...")
 if st.button("Extract candidate terms") and pasted.strip():
-    extracted = extract_terms(pasted)
-    if not extracted:
+    found = extract_terms(pasted)
+    st.session_state["extracted_terms"] = found
+    if not found:
         st.info("No candidate terms recognized.")
-    else:
-        st.dataframe(pd.DataFrame([e.__dict__ for e in extracted]), hide_index=True, width="stretch")
-        st.caption("Review each candidate and add validated ones to the register above manually - "
-                   "extraction output is a draft, never authoritative.")
+
+extracted = st.session_state.get("extracted_terms") or []
+if extracted:
+    st.dataframe(pd.DataFrame([e.__dict__ for e in extracted]), hide_index=True, width="stretch")
+    col1, col2 = st.columns([2, 3])
+    suppliers = data["suppliers"]
+    names = dict(zip(suppliers["supplier_id"], suppliers["supplier_name"]))
+    draft_supplier = col1.selectbox("Assign drafts to supplier", suppliers["supplier_id"].tolist(),
+                                    format_func=lambda s: names.get(s, s))
+    if col2.button(f"Append {len(extracted)} draft(s) to the register as Inferred / Low confidence"):
+        from components.state import set_table
+        terms_df = data["contract_terms"]
+        existing_ids = set(terms_df["term_id"].astype(str))
+        rows, n = [], 1
+        for e in extracted:
+            term_id = f"CT-DRAFT-{draft_supplier.split('-')[-1]}-{n:02d}"
+            while term_id in existing_ids:
+                n += 1
+                term_id = f"CT-DRAFT-{draft_supplier.split('-')[-1]}-{n:02d}"
+            existing_ids.add(term_id)
+            rows.append({
+                "term_id": term_id, "supplier_id": draft_supplier, "category": e.category,
+                "term_name": e.term_name, "value": e.value, "unit": "",
+                "status": "Inferred", "source_reference": "Contract text extraction (draft)",
+                "confidence": "Low", "notes": e.evidence[:200],
+            })
+        set_table("contract_terms", pd.concat([terms_df, pd.DataFrame(rows)], ignore_index=True))
+        st.session_state.pop("extracted_terms", None)
+        st.success(f"Appended {len(rows)} draft terms for {names.get(draft_supplier)} - "
+                   "validate them in the register (they stay Inferred / Low until confirmed).")
+        st.rerun()
+    st.caption("Drafts are never authoritative: appended terms enter the register as "
+               "**Inferred / Low confidence** and appear in the validation and data-quality views "
+               "until a human confirms them.")

@@ -60,7 +60,15 @@ metric_row([
     ("Working-capital cost", fmt_currency_compact(t["wc_cost"]), None),
     ("Expected risk cost*", fmt_currency_compact(t["risk_cost"]), None),
 ])
-st.caption("*Expected risk cost is a decision-analysis measure (probability × impact), not a booked expense.")
+metric_row([
+    ("Estimated savings opportunity (quote vs should-cost)†", fmt_currency_compact(sc_gap), None),
+    ("OEM inventory (modeled)", fmt_currency_compact(t["oem_inventory_value"]), None),
+    ("Consigned material (OEM-purchased)", fmt_currency_compact(t["consigned_material_cost"]), None),
+    ("One-time + transition", fmt_currency_compact(t["one_time_cost"] + t["transition_cost"]), None),
+], columns=4)
+st.caption("*Expected risk cost is a decision-analysis measure (probability × impact), not a booked "
+           "expense. †Sum of positive quote-vs-should-cost variances across allocated volume — an "
+           "analytical ceiling, not a committed saving; see the Should-Cost page for interpretation.")
 
 formula_expander("How true economic cost is calculated", """
 ```

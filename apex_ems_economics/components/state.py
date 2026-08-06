@@ -40,6 +40,7 @@ def get_data() -> Dict[str, pd.DataFrame]:
 def set_table(name: str, df: pd.DataFrame) -> None:
     st.session_state[_DATA_KEY][name] = df
     st.session_state[_RESULT_CACHE_KEY] = {}  # invalidate engine cache
+    st.session_state.pop("mc_result", None)   # simulated results are stale too
     st.session_state[_DIRTY_KEY] = True
 
 
@@ -130,4 +131,8 @@ def editable_table(
         column_config=column_config, disabled=disabled)
     if not disabled and not edited.equals(df):
         set_table(entity, edited)
+        # Recompute the whole page immediately so metrics, charts, and engine
+        # results rendered ABOVE this editor also reflect the edit right away.
+        # No loop risk: next run stores == editor value, so equals() is True.
+        st.rerun()
     return edited

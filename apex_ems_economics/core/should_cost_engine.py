@@ -32,6 +32,7 @@ DEFAULT_BENCHMARK_STRUCTURE = {
 
 
 def level1_benchmark(quoted_price: float, structure: Optional[Dict[str, float]] = None) -> pd.DataFrame:
+    """Decompose a quoted price by the benchmark cost structure (sanity view)."""
     s = structure or DEFAULT_BENCHMARK_STRUCTURE
     rows = [
         {"bucket": "Material", "pct": s["material_pct"], "value": quoted_price * s["material_pct"] / 100},
@@ -41,6 +42,44 @@ def level1_benchmark(quoted_price: float, structure: Optional[Dict[str, float]] 
         {"bucket": "Other", "pct": s["other_pct"], "value": quoted_price * s["other_pct"] / 100},
     ]
     return pd.DataFrame(rows)
+
+
+def benchmark_should_cost(
+    data: Dict[str, pd.DataFrame], product_id: str,
+    structure: Optional[Dict[str, float]] = None,
+) -> Dict[str, float]:
+    """Level 1 top-down should-cost (quote scope).
+
+    should-cost = estimated EMS-scope material / benchmark material share
+
+    Anchoring on material (the one input usually estimable without process
+    data) keeps Level 1 independent of the quote itself - applying the
+    structure percentages *to the quote* would be circular and could never
+    show a variance. Material comes from the BOM's EMS-scope rollup, falling
+    back to the quoted material content when no BOM exists.
+    """
+    s = structure or DEFAULT_BENCHMARK_STRUCTURE
+    material_share = s["material_pct"] / 100.0
+    material = economics_engine.material_cost_per_unit(data, product_id)
+    ems_material = material["ems_material"]
+    source = "BOM rollup"
+    if ems_material <= 0:
+        quotes = data.get("supplier_quotes", pd.DataFrame())
+        if quotes is not None and not quotes.empty:
+            m = quotes[(quotes["product_id"] == product_id)
+                       & quotes["quoted_material_content"].notna()]
+            if not m.empty:
+                ems_material = float(m.iloc[0]["quoted_material_content"])
+                source = f"quoted material content ({m.iloc[0]['quote_id']})"
+    if ems_material <= 0 or material_share <= 0:
+        return {"should_cost": float("nan"), "ems_material": 0.0,
+                "material_share_pct": s["material_pct"], "material_source": "unavailable"}
+    return {
+        "should_cost": ems_material / material_share,
+        "ems_material": ems_material,
+        "material_share_pct": s["material_pct"],
+        "material_source": source,
+    }
 
 
 def process_based_should_cost(
@@ -169,12 +208,25 @@ def variance_analysis(
     return pd.DataFrame(rows)
 
 
-def comparison_table(data: Dict[str, pd.DataFrame], product_id: str) -> pd.DataFrame:
-    """Compare quotes, should-cost, and standard cost across suppliers."""
+def comparison_table(
+    data: Dict[str, pd.DataFrame], product_id: str,
+    method: str = "process",
+    structure: Optional[Dict[str, float]] = None,
+) -> pd.DataFrame:
+    """Compare quotes, should-cost, and standard cost across suppliers.
+
+    ``method`` selects the should-cost engine driving the numbers:
+      * "benchmark" - Level 1 top-down (material / benchmark material share);
+        supplier-independent, confidence always Low.
+      * "process"   - Level 2/3 bottom-up (BOM material + modeled conversion);
+        confidence follows BOM coverage and conversion availability.
+    """
     products = data["products"]
     prod = products[products["product_id"] == product_id]
     std_cost = float(prod.iloc[0]["current_standard_cost"]) if not prod.empty else 0.0
     volume = float(prod.iloc[0]["annual_volume"]) if not prod.empty else 0.0
+
+    bench = benchmark_should_cost(data, product_id, structure) if method == "benchmark" else None
 
     quotes = data.get("supplier_quotes", pd.DataFrame())
     suppliers = data["suppliers"].set_index("supplier_id")
@@ -184,19 +236,30 @@ def comparison_table(data: Dict[str, pd.DataFrame], product_id: str) -> pd.DataF
             sid = q["supplier_id"]
             sc = process_based_should_cost(data, product_id, sid)
             quoted = economics_engine.tier_unit_price(q, volume)
+            if method == "benchmark":
+                should_cost = bench["should_cost"]
+                sc_confidence = "Low"
+                sc_method = "Level 1 benchmark"
+            else:
+                should_cost = sc["should_cost"]
+                sc_confidence = (
+                    "High" if sc["bom_high_confidence_share"] > 0.7 and not sc["conversion_missing"]
+                    else "Medium" if sc["bom_high_confidence_share"] > 0.4 else "Low")
+                sc_method = "Process-based (Level 2/3)"
+            variance = quoted - should_cost if should_cost == should_cost else float("nan")
             rows.append({
                 "supplier_id": sid,
                 "supplier_name": suppliers.loc[sid, "supplier_name"] if sid in suppliers.index else sid,
                 "quoted_price": quoted,
-                "should_cost": sc["should_cost"],
+                "should_cost": should_cost,
                 "consigned_material": sc["consigned_material"],
                 "current_standard_cost": std_cost,
-                "variance_usd": quoted - sc["should_cost"],
-                "variance_pct": (quoted - sc["should_cost"]) / quoted * 100 if quoted else 0.0,
+                "variance_usd": variance,
+                "variance_pct": variance / quoted * 100 if quoted and variance == variance else 0.0,
                 "quote_status": q.get("status", ""),
                 "quote_confidence": q.get("confidence", ""),
-                "should_cost_confidence": (
-                    "High" if sc["bom_high_confidence_share"] > 0.7 and not sc["conversion_missing"]
-                    else "Medium" if sc["bom_high_confidence_share"] > 0.4 else "Low"),
+                "should_cost_method": sc_method,
+                "should_cost_confidence": sc_confidence,
+                "bom_high_confidence_share": sc["bom_high_confidence_share"],
             })
     return pd.DataFrame(rows)

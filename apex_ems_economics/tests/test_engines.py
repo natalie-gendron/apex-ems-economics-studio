@@ -144,6 +144,30 @@ def test_should_cost_variance(data):
     atlas = comp[comp["supplier_id"] == "SUP-ATL"].iloc[0]
     sc = process_based_should_cost(data, "P-100", "SUP-ATL")
     assert atlas["variance_usd"] == pytest.approx(atlas["quoted_price"] - sc["should_cost"])
+    # Process should-cost is quote scope: EMS material + conversion, no consigned.
+    assert sc["should_cost"] == pytest.approx(sc["ems_material"] + sc["conversion"])
+    assert sc["should_cost_all_in"] == pytest.approx(sc["material"] + sc["conversion"])
+
+
+def test_should_cost_method_changes_numbers(data):
+    """The Level 1 benchmark engine must produce different figures than Level 2/3."""
+    from core.should_cost_engine import benchmark_should_cost
+
+    structure = {"material_pct": 68.0, "labor_pct": 8.0, "overhead_pct": 12.0,
+                 "margin_pct": 9.0, "other_pct": 3.0}
+    bench = benchmark_should_cost(data, "P-100", structure)
+    # Top-down: EMS material / material share (independent of the quote).
+    assert bench["should_cost"] == pytest.approx(bench["ems_material"] / 0.68)
+
+    process = comparison_table(data, "P-100", method="process")
+    benchmark = comparison_table(data, "P-100", method="benchmark", structure=structure)
+    atl_process = process[process["supplier_id"] == "SUP-ATL"].iloc[0]
+    atl_bench = benchmark[benchmark["supplier_id"] == "SUP-ATL"].iloc[0]
+    assert atl_bench["should_cost"] != pytest.approx(atl_process["should_cost"])
+    assert atl_bench["should_cost_confidence"] == "Low"
+    assert atl_bench["should_cost_method"] == "Level 1 benchmark"
+    # Benchmark should-cost is supplier-independent: same value on every row.
+    assert benchmark["should_cost"].nunique() == 1
 
 
 # ---------------------------------------------------------------- landed cost / double counting

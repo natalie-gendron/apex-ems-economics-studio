@@ -4,7 +4,8 @@ import streamlit as st
 from components.executive_cards import formula_expander
 from components.state import get_data, page_setup
 from core.should_cost_engine import (
-    DEFAULT_BENCHMARK_STRUCTURE, comparison_table, level1_benchmark, variance_analysis)
+    DEFAULT_BENCHMARK_STRUCTURE, benchmark_should_cost, comparison_table,
+    level1_benchmark, variance_analysis)
 
 page_setup("Should-Cost Model",
            "Three levels of should-cost detail, compared with quotes, standard cost, and peers.")
@@ -19,39 +20,22 @@ volume = float(products.set_index("product_id").loc[product_id, "annual_volume"]
 method = st.radio("Should-cost method", [
     "Level 1 — High-level benchmark",
     "Level 2 — Process-based estimate",
-    "Level 3 — Detailed bottom-up"], horizontal=True)
+    "Level 3 — Detailed bottom-up"], horizontal=True, index=1)
 st.caption({
-    "Level 1 — High-level benchmark": "Cost-structure percentages applied to the quote. "
-                                      "Confidence: Low — a sanity check, not an estimate.",
-    "Level 2 — Process-based estimate": "BOM material + modeled conversion. "
+    "Level 1 — High-level benchmark": "Top-down: estimated EMS-scope material ÷ benchmark "
+                                      "material share. Supplier-independent sanity check; "
+                                      "confidence is always Low.",
+    "Level 2 — Process-based estimate": "Bottom-up: BOM material + modeled conversion. "
                                         "Confidence follows BOM and conversion data quality.",
-    "Level 3 — Detailed bottom-up": "Component-level BOM and routing. Only as good as the "
-                                    "coverage shown below.",
+    "Level 3 — Detailed bottom-up": "Same engine as Level 2 at full BOM/routing depth — only "
+                                    "meaningful when the underlying data is high-confidence "
+                                    "(gate below).",
 }[method])
 
-st.divider()
-st.subheader("Quote vs should-cost comparison")
-comp = comparison_table(data, product_id)
-if comp.empty:
-    st.info("No quotes for this product.")
-    st.stop()
-st.dataframe(comp, hide_index=True, width="stretch", column_config={
-    "quoted_price": st.column_config.NumberColumn("Quoted price (EMS scope)", format="$%,.0f"),
-    "should_cost": st.column_config.NumberColumn("Should-cost (EMS scope)", format="$%,.0f"),
-    "consigned_material": st.column_config.NumberColumn("Consigned mat. (excluded)", format="$%,.0f"),
-    "current_standard_cost": st.column_config.NumberColumn("Std cost (all-in)", format="$%,.0f"),
-    "variance_usd": st.column_config.NumberColumn("Variance $", format="$%,.0f"),
-    "variance_pct": st.column_config.NumberColumn("Variance %", format="%.1f%%"),
-})
-st.caption(
-    "Quotes and should-cost are EMS scope (OEM-consigned material excluded and added separately "
-    "by the economic engine); standard cost is all-in. Positive variance = quote above "
-    "should-cost. **This is not automatically supplier overpricing** — see the interpretation "
-    "split below. Comparable-product and historical-cost comparisons can be added to the "
-    "assumption register as benchmarks.")
-
+# ------------------------------------------------------------- method setup
+structure = None
 if method.startswith("Level 1"):
-    st.subheader("Level 1 benchmark structure")
+    st.subheader("Benchmark cost structure (EMS quote scope)")
     cols = st.columns(5)
     structure = {}
     for col, (key, default) in zip(cols, DEFAULT_BENCHMARK_STRUCTURE.items()):
@@ -60,10 +44,62 @@ if method.startswith("Level 1"):
     total_pct = sum(structure.values())
     if abs(total_pct - 100) > 0.01:
         st.warning(f"Structure sums to {total_pct:.0f}% (expected 100%).")
+    bench = benchmark_should_cost(data, product_id, structure)
+    if bench["should_cost"] == bench["should_cost"]:  # not NaN
+        st.caption(f"Benchmark should-cost = EMS material ${bench['ems_material']:,.0f} "
+                   f"({bench['material_source']}) ÷ {bench['material_share_pct']:.0f}% material share "
+                   f"= **${bench['should_cost']:,.0f}** — anchored on material so it stays "
+                   "independent of the quote (percent-of-quote would be circular).")
+    else:
+        st.warning("No material estimate available (no BOM and no quoted material content) — "
+                   "the benchmark should-cost cannot be computed for this product.")
+
+engine_key = "benchmark" if method.startswith("Level 1") else "process"
+comp = comparison_table(data, product_id, method=engine_key, structure=structure)
+
+# Level 3 gate: detailed bottom-up requires high-confidence data coverage.
+LEVEL3_COVERAGE_THRESHOLD = 0.7
+if method.startswith("Level 3") and not comp.empty:
+    coverage = float(comp.iloc[0]["bom_high_confidence_share"])
+    if coverage < LEVEL3_COVERAGE_THRESHOLD:
+        st.warning(
+            f"Level 3 is not supported by the data for this product: only {coverage:.0%} of BOM "
+            f"lines are high-confidence (threshold {LEVEL3_COVERAGE_THRESHOLD:.0%}). The numbers "
+            "below are the same process-based engine at Level 2 confidence. Improve BOM pricing "
+            "confidence (see Data Quality page) to justify Level 3.")
+
+st.divider()
+st.subheader("Quote vs should-cost comparison")
+if comp.empty:
+    st.info("No quotes for this product.")
+    st.stop()
+show_cols = [c for c in comp.columns if c != "bom_high_confidence_share"]
+st.dataframe(comp[show_cols], hide_index=True, width="stretch", column_config={
+    "quoted_price": st.column_config.NumberColumn("Quoted price (EMS scope)", format="$%,.0f"),
+    "should_cost": st.column_config.NumberColumn("Should-cost (EMS scope)", format="$%,.0f"),
+    "consigned_material": st.column_config.NumberColumn("Consigned mat. (excluded)", format="$%,.0f"),
+    "current_standard_cost": st.column_config.NumberColumn("Std cost (all-in)", format="$%,.0f"),
+    "variance_usd": st.column_config.NumberColumn("Variance $", format="$%,.0f"),
+    "variance_pct": st.column_config.NumberColumn("Variance %", format="%.1f%%"),
+})
+st.caption(
+    f"Numbers produced by: **{comp.iloc[0]['should_cost_method']}**. "
+    "Quotes and should-cost are EMS scope (OEM-consigned material excluded and added separately "
+    "by the economic engine); standard cost is all-in. Positive variance = quote above "
+    "should-cost. **This is not automatically supplier overpricing** — see the interpretation "
+    "split below. Comparable-product and historical-cost comparisons can be added to the "
+    "assumption register as benchmarks.")
+
+if method.startswith("Level 1"):
+    st.subheader("Benchmark decomposition of each quote")
+    st.caption("The structure percentages applied to each quoted price — a composition sanity "
+               "check, separate from the should-cost above.")
     for _, row in comp.iterrows():
-        st.markdown(f"**{row['supplier_name']}** — quoted ${row['quoted_price']:,.2f}")
+        st.markdown(f"**{row['supplier_name']}** — quoted ${row['quoted_price']:,.0f}")
         st.dataframe(level1_benchmark(row["quoted_price"], structure), hide_index=True,
-                     width="stretch")
+                     width="stretch", column_config={
+                         "pct": st.column_config.NumberColumn("% of quote", format="%.0f%%"),
+                         "value": st.column_config.NumberColumn("Value", format="$%,.0f")})
 else:
     st.subheader("Variance interpretation by supplier")
     supplier = st.selectbox("Supplier", comp["supplier_id"].tolist(),
@@ -82,10 +118,12 @@ else:
 
 formula_expander("Should-cost variance", """
 ```
-Should-cost variance = supplier quoted cost − internal should-cost
+Level 1 benchmark should-cost = estimated EMS material ÷ benchmark material share
+Level 2/3 process should-cost = EMS-scope BOM material + modeled conversion
+Should-cost variance          = supplier quoted cost − selected should-cost
 Confidence-adjusted opportunity = variance × BOM-confidence share × 0.6 (heuristic)
 ```
 Distinguished outcomes: likely commercial opportunity · possible specification difference ·
-possible volume difference (tier gap) · possible quality/service premium · possible logistics
+possible volume difference (tier gap) · possible quality or service premium · possible logistics
 difference · possible overhead difference · possible missing data · unexplained variance.
 """)

@@ -1,6 +1,7 @@
 # Root requirements for Streamlit Community Cloud (it reads dependencies from
 # the repository root). The suite is verified on pandas 2.3.3 and 3.0.5; ranges
 # stay loose enough to install on newer Python versions (Cloud runs 3.14).
+# Note: editing this file forces a Cloud environment rebuild + app restart.
 streamlit>=1.50
 pandas>=2.3
 numpy>=2.0,<3

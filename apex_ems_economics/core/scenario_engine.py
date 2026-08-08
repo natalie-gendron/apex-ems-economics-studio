@@ -36,6 +36,8 @@ ENTITY_TABLE_MAP = {
     "logistics": ("logistics_assumptions", "lane_id"),
     "service": ("service_levels", "supplier_id"),
     "capacity": ("capacity_records", "site_id"),
+    "platform": ("tester_platforms", "platform_id"),
+    "system_component": ("system_components", "system_comp_id"),
 }
 
 QUOTE_PRICE_COLUMNS = ["base_unit_price", "tier2_unit_price", "tier3_unit_price"]

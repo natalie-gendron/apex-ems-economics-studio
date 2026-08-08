@@ -14,4 +14,4 @@ field_repair_cost_multiplier,1.5,x,Field-failure cost per event as a multiple of
 mc_default_iterations,500,runs,Default Monte Carlo iteration count
 mc_default_seed,42,seed,Default Monte Carlo random seed for reproducibility
 gross_margin_reference_pct,54,%,Portfolio average gross margin used for lost-margin estimates
-internal_cogs_pct_of_revenue,10.0,%,"In-house final assembly, system integration, calibration and system test as a percent of system revenue - outside the EMS scope, used only to complete the per-system COGS picture"
+inhouse_conversion_pct_of_revenue,3.5,%,"In-house final assembly, system integration, calibration and system test LABOR AND OVERHEAD as a percent of system revenue - purchased system material is itemized separately in system_components"

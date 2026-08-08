@@ -154,8 +154,10 @@ a major ATE player:
 | EMS quoted spend (EMS scope) | **$825M** |
 | OEM-consigned strategic silicon | **$275M** |
 | **Total modeled spend** | **$1.10B** — of which ~75% ($830M) is material, ~25% conversion |
-| COGS-relevant (incl. freight & duties) | $1.14B *(of a ~$1.5B total COGS; internal system integration and test are outside this model)* |
-| True economic cost | $1.27B |
+| Purchased system material (chassis, backplane, harnesses, cooling, controller, licenses) | **$261M** |
+| In-house assembly & system test (labeled labor+OH assumption) | $140M |
+| **Full system COGS** | **$1.54B** on $4.0B revenue → **61% gross margin** |
+| True economic cost (EMS decision scope) | $1.27B |
 | OEM-owned inventory / total supply exposure | $176M / $286M |
 
 ### What the company ships vs what the EMS builds
@@ -208,6 +210,10 @@ Four scenarios:
    cash freed** for a 0.6% price concession
 4. **Dual-Source the mmWave module** — a running-cost premium plus $11M one-time buys a
    ≈ **−$8.0M/yr expected-risk reduction** on the single-sourced RF tester line
+5. **EMS Box Build** — Atlas takes over system integration and system-material procurement:
+   ≈ **−$1.6M/yr** COGS against **$4.3M one-time** (≈2.7-year payback) and *higher* supplier
+   dependency risk. Close to a wash on P&L — which is exactly why most ATE makers keep final
+   integration in-house, and why the model is worth having before the debate starts.
 
 On the flagship channel card, Meridian quotes $950/board below Atlas yet lands
 **~$2,970/board worse** in true economic cost — the studio's central lesson.
@@ -267,8 +273,10 @@ all 19 Streamlit pages headlessly.
   its own flow); consigned-subassembly linkage (SA-210 → P-200) is represented through
   BOM consignment, and subassemblies are excluded from platform ship-sets to prevent
   double counting.
-- In-house final assembly, integration, and system test are a single labeled percent-of-
-  revenue assumption (`internal_cogs_pct_of_revenue`), not a modeled cost centre.
+- In-house final assembly, integration, and system test labor/overhead is a single labeled
+  percent-of-revenue assumption (`inhouse_conversion_pct_of_revenue`), not a modeled cost
+  centre — purchased system material IS itemized in `system_components`. The boundary is
+  deliberate: the studio models what the OEM **buys**, not what it **builds**.
 - Volume-tier pricing evaluates annual volume at the allocated supplier, using
   product-level annual volume for tier qualification.
 - PDF export deferred (Excel package is the v1 artifact).

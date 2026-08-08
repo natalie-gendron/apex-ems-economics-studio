@@ -1,0 +1,16 @@
+system_comp_id,platform_id,component,category,qpa_per_system,unit_cost,currency,supplier,lead_time_days,ownership_model,purchase_responsibility,price_source,confidence,notes
+SYS-D9000-01,PLT-D9000,Mainframe chassis & cabinet set,Structural,1,62000,USD,Precision Fabrication Group,90,OEM-owned stored internally,OEM procurement,Contract price,High,Welded frame; seismic-rated cabinets; painted and badged
+SYS-D9000-02,PLT-D9000,24-slot backplane assembly,Interconnect,1,38000,USD,TechBoard Asia,75,OEM-owned stored internally,OEM procurement,Supplier quote,High,High-speed backplane; candidate for EMS transfer
+SYS-D9000-03,PLT-D9000,Cable & harness set,Interconnect,1,26000,USD,HarnessCo,60,OEM-owned stored internally,OEM procurement,Supplier quote,High,Hand-built harnesses; labor-intensive
+SYS-D9000-04,PLT-D9000,Cooling & thermal management subsystem,Thermal,1,21000,USD,ThermalDyne,70,OEM-owned stored internally,OEM procurement,Supplier quote,High,Closed-loop liquid cooling plus air handling
+SYS-D9000-05,PLT-D9000,Manipulator & docking interface kit,Mechanical,1,16000,USD,DockTech,80,OEM-owned stored internally,OEM procurement,Supplier quote,Medium,Handler/prober docking hardware
+SYS-D9000-06,PLT-D9000,AC power distribution subsystem,Power,1,14000,USD,PowerRail Systems,65,OEM-owned stored internally,OEM procurement,Supplier quote,High,
+SYS-D9000-07,PLT-D9000,System controller & peripherals,Compute,1,11000,USD,Industrial Compute Partners,45,OEM-owned stored internally,OEM procurement,Distributor quote,High,Rack-mount controller; displays; storage
+SYS-D9000-08,PLT-D9000,Third-party software licenses,Software,1,7000,USD,Various,15,OEM-owned stored internally,OEM procurement,License agreement,High,OS; instrument drivers; analysis libraries
+SYS-RF7000-01,PLT-RF7000,Compact mainframe & cabinet,Structural,1,24000,USD,Precision Fabrication Group,90,OEM-owned stored internally,OEM procurement,Contract price,High,
+SYS-RF7000-02,PLT-RF7000,RF backplane & distribution assembly,Interconnect,1,14000,USD,TechBoard Asia,75,OEM-owned stored internally,OEM procurement,Supplier quote,High,
+SYS-RF7000-03,PLT-RF7000,Precision cable & waveguide set,Interconnect,1,12000,USD,MicroCoax,85,OEM-owned stored internally,OEM procurement,Supplier quote,High,Phase-matched; calibration-critical
+SYS-RF7000-04,PLT-RF7000,Cooling subsystem,Thermal,1,6000,USD,ThermalDyne,70,OEM-owned stored internally,OEM procurement,Supplier quote,Medium,
+SYS-RF7000-05,PLT-RF7000,System controller & peripherals,Compute,1,6000,USD,Industrial Compute Partners,45,OEM-owned stored internally,OEM procurement,Distributor quote,High,
+SYS-DIB-01,PLT-DIB,Stiffener frame & mounting hardware,Mechanical,1,1200,USD,Precision Fabrication Group,45,OEM-owned stored internally,OEM procurement,Supplier quote,Medium,Per device-program board
+SYS-DIB-02,PLT-DIB,Test-site socket hardware kit,Mechanical,1,600,USD,ProbeTech,55,OEM-owned stored internally,OEM procurement,Supplier quote,Medium,

@@ -8,3 +8,6 @@ OVR-006,SCN-003,inventory,INV-007,ownership_to_ems_share,absolute,100,Carrier co
 OVR-007,SCN-004,risk,RSK-006,probability_pct,absolute,3,Dual sourcing reduces single-source disruption probability from 10% to 3%
 OVR-008,SCN-002,risk,RSK-002,probability_pct,absolute,20,Higher Meridian share increases exposure to delivery shortfall
 OVR-009,SCN-002,service,SUP-MER,safety_stock_days,absolute,50,Additional safety stock during and after the channel-card ramp at Meridian
+OVR-010,SCN-005,platform,PLT-D9000,box_build_fee_per_system,absolute,298000,Atlas box-build fee: system material + EMS integration + EMS margin
+OVR-011,SCN-005,platform,PLT-RF7000,box_build_fee_per_system,absolute,96000,Atlas box-build fee for the RF platform
+OVR-012,SCN-005,risk,RSK-005,probability_pct,absolute,16,Deeper single-partner dependency raises Atlas exposure under box build

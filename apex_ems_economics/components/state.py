@@ -40,6 +40,7 @@ def get_data() -> Dict[str, pd.DataFrame]:
 def set_table(name: str, df: pd.DataFrame) -> None:
     st.session_state[_DATA_KEY][name] = df
     st.session_state[_RESULT_CACHE_KEY] = {}  # invalidate engine cache
+    st.session_state.pop("apex_scenario_data", None)
     st.session_state.pop("mc_result", None)   # simulated results are stale too
     st.session_state[_DIRTY_KEY] = True
 
@@ -47,6 +48,7 @@ def set_table(name: str, df: pd.DataFrame) -> None:
 def reload_from_disk() -> None:
     st.session_state[_DATA_KEY] = get_repo().load_all()
     st.session_state[_RESULT_CACHE_KEY] = {}
+    st.session_state.pop("apex_scenario_data", None)
     st.session_state[_DIRTY_KEY] = False
 
 
@@ -63,6 +65,18 @@ def get_result(scenario_id: str) -> ScenarioResult:
     cache = st.session_state.setdefault(_RESULT_CACHE_KEY, {})
     if scenario_id not in cache:
         cache[scenario_id] = compute_scenario(get_data(), scenario_id, get_settings())
+    return cache[scenario_id]
+
+
+def get_scenario_data(scenario_id: str) -> Dict[str, pd.DataFrame]:
+    """Baseline data with this scenario's overrides applied.
+
+    Views that read entity tables directly (rather than engine results) must
+    use this, or scenario overrides on those tables are invisible.
+    """
+    cache = st.session_state.setdefault("apex_scenario_data", {})
+    if scenario_id not in cache:
+        cache[scenario_id] = scenario_engine.apply_scenario(get_data(), scenario_id)
     return cache[scenario_id]
 
 

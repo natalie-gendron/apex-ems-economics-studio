@@ -392,6 +392,22 @@ def compute_scenario(
     totals["econ_cost_per_unit"] = (
         totals["total_economic_cost"] / totals["good_units"] if totals["good_units"] else 0.0)
 
+    # System-level costs outside the EMS board scope: purchased system material,
+    # in-house assembly/system-test labor, or an EMS box-build fee. Kept OUT of
+    # total_economic_cost (which stays EMS-decision scope) and reported
+    # separately so the full per-system COGS picture is still available.
+    from core import platform_engine  # local import: platform_engine type-hints ScenarioResult
+
+    system = platform_engine.system_cost_totals(data, settings)
+    totals.update(system)
+    totals["full_system_cogs"] = (
+        totals["cogs_relevant_cost"] + system["system_material_cost"]
+        + system["inhouse_conversion_cost"] + system["box_build_fee_cost"])
+    totals["system_gross_margin"] = system["system_revenue"] - totals["full_system_cogs"]
+    totals["system_gross_margin_pct"] = (
+        totals["system_gross_margin"] / system["system_revenue"] * 100
+        if system["system_revenue"] else 0.0)
+
     supplier_summary = _summarize(line_items, "supplier_id", "supplier_name")
     product_summary = _summarize(line_items, "product_id", "product_name")
 
@@ -503,12 +519,17 @@ def compare_scenarios(results: Dict[str, ScenarioResult], baseline_id: str) -> p
             "total_economic_cost": t.get("total_economic_cost", 0),
             "econ_cost_per_unit": t.get("econ_cost_per_unit", 0),
             "cogs_relevant_cost": t.get("cogs_relevant_cost", 0),
+            "system_material_cost": t.get("system_material_cost", 0),
+            "inhouse_conversion_cost": t.get("inhouse_conversion_cost", 0),
+            "box_build_fee_cost": t.get("box_build_fee_cost", 0),
+            "full_system_cogs": t.get("full_system_cogs", 0),
+            "system_gross_margin_pct": t.get("system_gross_margin_pct", 0),
             "oem_inventory_value": t.get("oem_inventory_value", 0),
         }
         if base is not None:
             bt = base.totals
             row["delta_total_vs_baseline"] = row["total_economic_cost"] - bt.get("total_economic_cost", 0)
-            row["delta_cogs_vs_baseline"] = row["cogs_relevant_cost"] - bt.get("cogs_relevant_cost", 0)
+            row["delta_cogs_vs_baseline"] = row["full_system_cogs"] - bt.get("full_system_cogs", 0)
             # Gross margin impact = -delta COGS (revenue held constant in v1).
             row["gross_margin_impact"] = -row["delta_cogs_vs_baseline"]
             row["delta_wc_inventory"] = row["oem_inventory_value"] - bt.get("oem_inventory_value", 0)

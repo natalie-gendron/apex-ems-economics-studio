@@ -5,7 +5,8 @@ import pytest
 
 from core import economics_engine, inventory_engine, quality_engine, scenario_engine
 from core.config import carrying_cost_pct, load_settings
-from core.economics_engine import (
+from core.economics_engine import (  # noqa: F401
+    ANNUAL_BUCKETS,
     compute_scenario, cost_bridge, get_quote, material_cost_per_unit,
     conversion_cost_per_unit, tier_unit_price)
 from core.should_cost_engine import comparison_table, process_based_should_cost
@@ -293,8 +294,52 @@ def test_platform_rollup_ship_set_math(data, baseline, settings):
     assert not subs.empty
     assert not set(subs["product_id"]).intersection(set(detail["product_id"]))
 
-    # margin closes into a plausible ATE range once in-house content is added
+    # margin closes into a plausible ATE range once system content is added
     assert 45 < d9000["gross_margin_pct"] < 75
+    # full COGS stack reconciles
+    assert d9000["total_cogs_per_system"] == pytest.approx(
+        d9000["ems_content_per_system"] + d9000["system_material_per_system"]
+        + d9000["inhouse_conversion_per_system"] + d9000["box_build_fee_per_system"])
+
+
+def test_system_material_itemized_and_box_build(data, settings):
+    """Purchased system material is itemized; box build replaces it plus in-house labor."""
+    from core.platform_engine import (platform_rollup, system_component_detail,
+                                      system_material_per_system)
+
+    base = compute_scenario(data, "SCN-001", settings)
+    box = compute_scenario(data, "SCN-005", settings)
+
+    # itemized system material equals the sum of its component lines
+    detail = system_component_detail(data, "PLT-D9000")
+    assert not detail.empty
+    assert system_material_per_system(data, "PLT-D9000") == pytest.approx(
+        detail["extended_per_system"].sum())
+
+    # baseline: OEM buys system material and does its own integration
+    base_roll = platform_rollup(data, base, settings)
+    d = base_roll[base_roll["platform_id"] == "PLT-D9000"].iloc[0]
+    assert d["assembled_by"] == "OEM in-house"
+    assert d["system_material_per_system"] > 0 and d["inhouse_conversion_per_system"] > 0
+    assert d["box_build_fee_per_system"] == 0
+
+    # box build: EMS absorbs both, fee takes their place
+    box_data = scenario_engine.apply_scenario(data, "SCN-005")
+    box_roll = platform_rollup(box_data, box, settings)
+    b = box_roll[box_roll["platform_id"] == "PLT-D9000"].iloc[0]
+    assert b["assembled_by"] == "EMS (box build)"
+    assert b["system_material_per_system"] == 0
+    assert b["inhouse_conversion_per_system"] == 0
+    assert b["box_build_fee_per_system"] > 0
+
+    # full system COGS is the decision axis, and box build is roughly a wash
+    assert box.totals["box_build_fee_cost"] > 0
+    assert box.totals["system_material_cost"] < base.totals["system_material_cost"]
+    delta = box.totals["full_system_cogs"] - base.totals["full_system_cogs"]
+    assert abs(delta) < base.totals["full_system_cogs"] * 0.02
+
+    # EMS-scope economic cost stays a clean, separate measure
+    assert "system_material_cost" not in ANNUAL_BUCKETS
 
 
 # ---------------------------------------------------------------- validation & DQ

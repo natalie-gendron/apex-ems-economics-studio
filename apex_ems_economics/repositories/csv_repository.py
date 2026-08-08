@@ -19,6 +19,7 @@ ENTITY_FILES: Dict[str, str] = {
     "sites": "sites.csv",
     "products": "products.csv",
     "tester_platforms": "tester_platforms.csv",
+    "system_components": "system_components.csv",
     "scenarios": "scenarios.csv",
     "allocations": "allocations.csv",
     "supplier_quotes": "supplier_quotes.csv",

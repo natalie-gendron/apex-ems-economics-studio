@@ -16,18 +16,35 @@ They are therefore EXCLUDED from the ship-set and reported separately as
 "carried inside parent boards" - otherwise every ship-set would be
 overstated by the subassembly content.
 
-Per-system COGS is completed with an explicitly-labeled in-house cost
-(final assembly, system integration, calibration, system test) taken from
-the ``internal_cogs_pct_of_revenue`` setting. That work never leaves the
-OEM, so it is outside the EMS decision scope but needed to show margin.
+Scope boundary
+--------------
+The studio models everything the OEM **buys**:
+  * EMS-built boards (the ship-set) - full economic cost via the main engine
+  * purchased system material (chassis, backplane, harnesses, cooling,
+    controller, licenses) - itemized in ``system_components``
+
+It does not itemize what the OEM **builds**: in-house final assembly,
+integration, calibration, and system test appear as one clearly-labeled
+labor-and-overhead assumption (``inhouse_conversion_pct_of_revenue``).
+Routings and internal cost centres belong to a manufacturing-economics
+model, not an EMS model.
+
+Box build
+---------
+When a platform carries a ``box_build_fee_per_system``, the EMS performs
+system integration and procures the system material: the OEM's purchased
+system material and in-house conversion both drop to zero and the fee
+takes their place. That makes make-vs-buy at the system level a directly
+comparable scenario.
 """
 from __future__ import annotations
 
-from typing import Dict
+from typing import TYPE_CHECKING, Dict
 
 import pandas as pd
 
-from core.economics_engine import ScenarioResult
+if TYPE_CHECKING:  # avoid a circular import; economics_engine imports this module
+    from core.economics_engine import ScenarioResult
 
 
 def _is_blank(series: pd.Series) -> pd.Series:
@@ -48,8 +65,50 @@ def _top_level_members(products: pd.DataFrame, platform_id: str) -> pd.DataFrame
     return products[same_platform & _is_blank(products["parent_product_id"])]
 
 
+def system_material_per_system(data: Dict[str, pd.DataFrame], platform_id: str) -> float:
+    """Purchased non-EMS material per system shipped (QPA x unit cost)."""
+    comps = data.get("system_components", pd.DataFrame())
+    if comps is None or comps.empty:
+        return 0.0
+    rows = comps[comps["platform_id"].astype(str) == str(platform_id)]
+    if rows.empty:
+        return 0.0
+    qpa = pd.to_numeric(rows["qpa_per_system"], errors="coerce").fillna(0)
+    cost = pd.to_numeric(rows["unit_cost"], errors="coerce").fillna(0)
+    return float((qpa * cost).sum())
+
+
+def system_cost_totals(
+    data: Dict[str, pd.DataFrame], settings: Dict[str, float]
+) -> Dict[str, float]:
+    """Annual OEM system-level costs outside the EMS board scope.
+
+    Returns purchased system material, in-house conversion, and box-build
+    fees across all platforms. Used by the economics engine to complete the
+    COGS picture without polluting the EMS-scope economic cost.
+    """
+    platforms = data.get("tester_platforms", pd.DataFrame())
+    totals = {"system_material_cost": 0.0, "inhouse_conversion_cost": 0.0,
+              "box_build_fee_cost": 0.0, "system_revenue": 0.0}
+    if platforms is None or platforms.empty:
+        return totals
+    pct = settings.get("inhouse_conversion_pct_of_revenue", 0.0) / 100.0
+    for _, plat in platforms.iterrows():
+        units = float(plat.get("annual_units", 0) or 0)
+        asp = float(plat.get("asp_usd", 0) or 0)
+        fee = float(plat.get("box_build_fee_per_system", 0) or 0)
+        totals["system_revenue"] += units * asp
+        if fee > 0:
+            totals["box_build_fee_cost"] += fee * units
+        else:
+            totals["system_material_cost"] += (
+                system_material_per_system(data, str(plat["platform_id"])) * units)
+            totals["inhouse_conversion_cost"] += asp * pct * units
+    return totals
+
+
 def platform_rollup(
-    data: Dict[str, pd.DataFrame], result: ScenarioResult, settings: Dict[str, float],
+    data: Dict[str, pd.DataFrame], result: "ScenarioResult", settings: Dict[str, float],
 ) -> pd.DataFrame:
     """Per-platform ship-set economics for one scenario."""
     platforms = data.get("tester_platforms", pd.DataFrame())
@@ -60,13 +119,14 @@ def platform_rollup(
     # Board economics per product (blend suppliers when volume is split).
     ps = result.product_summary.set_index("product_id")
     prod = products.set_index("product_id")
-    internal_pct = settings.get("internal_cogs_pct_of_revenue", 0.0) / 100.0
+    internal_pct = settings.get("inhouse_conversion_pct_of_revenue", 0.0) / 100.0
 
     rows = []
     for _, plat in platforms.iterrows():
         pid = str(plat["platform_id"])
         units = float(plat.get("annual_units", 0) or 0)
         asp = float(plat.get("asp_usd", 0) or 0)
+        fee = float(plat.get("box_build_fee_per_system", 0) or 0)
         revenue = units * asp
 
         members = _top_level_members(prod, pid)
@@ -82,12 +142,20 @@ def platform_rollup(
             quoted_ship_set += qpa * float(ps.loc[board_id, "quoted_per_unit"])
             econ_ship_set += qpa * float(ps.loc[board_id, "econ_cost_per_unit"])
 
-        internal_cost = asp * internal_pct
-        total_cogs = econ_ship_set + internal_cost
+        box_build = fee > 0
+        if box_build:
+            # EMS integrates the system and procures the system material.
+            system_material = 0.0
+            internal_cost = 0.0
+        else:
+            system_material = system_material_per_system(data, pid)
+            internal_cost = asp * internal_pct
+        total_cogs = econ_ship_set + system_material + internal_cost + fee
         rows.append({
             "platform_id": pid,
             "platform_name": plat.get("platform_name", pid),
             "platform_type": plat.get("platform_type", ""),
+            "assembled_by": "EMS (box build)" if box_build else "OEM in-house",
             "systems_shipped_per_year": units,
             "boards_per_system_qpa": board_count,
             "asp_per_system": asp,
@@ -96,13 +164,30 @@ def platform_rollup(
             "ems_content_per_system": econ_ship_set,
             "ems_premium_per_system": econ_ship_set - quoted_ship_set,
             "ems_content_pct_of_asp": econ_ship_set / asp * 100 if asp else 0.0,
-            "internal_assembly_test_per_system": internal_cost,
+            "system_material_per_system": system_material,
+            "inhouse_conversion_per_system": internal_cost,
+            "box_build_fee_per_system": fee,
             "total_cogs_per_system": total_cogs,
             "gross_margin_per_system": asp - total_cogs,
             "gross_margin_pct": (asp - total_cogs) / asp * 100 if asp else 0.0,
             "annual_ems_content": econ_ship_set * units,
+            "annual_total_cogs": total_cogs * units,
         })
     return pd.DataFrame(rows)
+
+
+def system_component_detail(data: Dict[str, pd.DataFrame], platform_id: str) -> pd.DataFrame:
+    """Purchased non-EMS system material lines for one platform."""
+    comps = data.get("system_components", pd.DataFrame())
+    if comps is None or comps.empty:
+        return pd.DataFrame()
+    rows = comps[comps["platform_id"].astype(str) == str(platform_id)].copy()
+    if rows.empty:
+        return rows
+    rows["extended_per_system"] = (
+        pd.to_numeric(rows["qpa_per_system"], errors="coerce").fillna(0)
+        * pd.to_numeric(rows["unit_cost"], errors="coerce").fillna(0))
+    return rows.sort_values("extended_per_system", ascending=False)
 
 
 def ship_set_detail(

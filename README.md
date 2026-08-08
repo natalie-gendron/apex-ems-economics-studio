@@ -23,7 +23,7 @@ python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py             # run the app
-pytest                           # 41 tests
+pytest                           # 49 tests
 ```
 
 ## Highlights

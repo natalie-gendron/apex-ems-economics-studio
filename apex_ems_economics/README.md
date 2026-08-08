@@ -104,11 +104,11 @@ pytest
 ```
 apex_ems_economics/
 ├── app.py                        # Home page: model health + data confidence
-├── pages/                        # 18 Streamlit pages (UI only, no business logic)
+├── pages/                        # 19 Streamlit pages (UI only, no business logic)
 │   ├── 01_Executive_Overview.py
-│   ├── 02_Supplier_and_Site_Profiles.py
+│   ├── 04_Tester_Platform_Rollup.py
 │   ├── ...
-│   └── 18_Executive_Evidence_Package.py
+│   └── 19_Executive_Evidence_Package.py
 ├── core/                         # Deterministic engines (UI-independent, importable)
 │   ├── economics_engine.py       #   quote → true economic cost; bridges; scenario deltas
 │   ├── platform_engine.py        #   board economics → cost per system shipped (QPA ship-sets)
@@ -133,9 +133,9 @@ apex_ems_economics/
 │   ├── contract_parser_service.py#   contract text → draft terms (no API key needed)
 │   └── ai_insight_service.py     #   anomalies, narratives, assumption challenge
 ├── components/                   # Streamlit widgets, charts, formatting
-├── data/sample/                  # Fictional sample dataset (21 CSV entities)
+├── data/sample/                  # Fictional sample dataset (23 CSV entities)
 ├── data/templates/               # Blank headers for starting a fresh model
-└── tests/                        # 41 tests incl. end-to-end and page smoke tests
+└── tests/                        # 49 tests incl. end-to-end, interaction, and smoke tests
 ```
 
 **Architecture rules:** business logic lives only in `core/`; the engines take a plain
@@ -253,11 +253,13 @@ validation — extracted contract terms are created as *Inferred / Low confidenc
 
 ## Testing
 
-`pytest` runs 41 tests: unit tests for material/conversion/tier-pricing/quality/working
-capital/risk/should-cost math, double-counting guards, yield-adjusted good units, scenario
-overrides (including inventory-ownership conversion), Monte Carlo reproducibility, an
-end-to-end test asserting the sample-data economics story, and a smoke test that renders
-all 19 Streamlit pages headlessly.
+`pytest` runs 49 tests: unit tests for material/conversion/tier-pricing/quality/working
+capital/risk/should-cost math, double-counting guards, yield-adjusted good units, platform
+ship-set and box-build reconciliation, scenario overrides (including inventory-ownership
+conversion), Monte Carlo reproducibility, an end-to-end test asserting the sample-data
+economics story, interaction tests proving key controls actually drive the numbers, and a
+smoke test that renders all 20 Streamlit pages headlessly. The suite is run against both
+pandas 2.x and 3.x, since Streamlit Cloud resolves the newer major version.
 
 ## Known limitations (v1)
 

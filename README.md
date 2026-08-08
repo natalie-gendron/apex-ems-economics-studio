@@ -7,8 +7,10 @@ assumptions into a deterministic, auditable economic decision model.
 The central lesson the model demonstrates: **the lowest-quote supplier is not the
 lowest-total-economic-cost supplier** once logistics, duties, quality, working capital,
 service, and risk are priced onto the same axis. The sample data models a fictional ATE
-(automated test equipment) maker: $10K–$30K instrument boards at 450–3,600 units/yr,
-consigned strategic silicon, and golden-tester correlation in conversion cost.
+(automated test equipment) maker at industry scale — **$4.0B modeled revenue, $825M of
+EMS spend plus $275M of OEM-consigned strategic silicon** — with $10K–$30K instrument
+boards, golden-tester correlation in conversion cost, and $286M of supply exposure split
+between OEM-owned and EMS-owned inventory.
 
 - **Application code and full documentation:** [`apex_ems_economics/`](apex_ems_economics/README.md)
 - **Original build specification:** [`initial_prompt.md`](initial_prompt.md)

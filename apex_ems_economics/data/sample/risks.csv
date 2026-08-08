@@ -1,13 +1,13 @@
 risk_id,supplier_id,product_id,category,description,probability_pct,financial_impact_usd,operational_impact,time_to_recover_weeks,mitigation_status,confidence,notes
-RSK-001,SUP-MER,,Country risk,Regional export disruption or extended port congestion affecting Penang shipments,8,6500000,Severe,8,Partially mitigated,Medium,Buffer stock covers about 3 weeks of tester builds
-RSK-002,SUP-MER,,Delivery risk,Chronic on-time-delivery shortfall slips tester integration and customer ship dates,15,2800000,High,4,Open,High,OTD at 90.5% versus 95% commitment
-RSK-003,SUP-MER,P-300,Quality risk,Yield deterioration on DPS modules drives field returns and warranty spike,12,1600000,Medium,6,Open,Medium,FPY trending down two quarters
-RSK-004,SUP-MER,,Data transparency risk,Bundled pricing conceals cost drivers; renegotiation and should-cost leverage limited,25,900000,Medium,12,Open,High,No audit rights in contract
-RSK-005,SUP-ATL,,Labor risk,Guadalajara labor market tightening raises rates or slows the channel-card ramp,10,1200000,Medium,6,Monitoring,Medium,
-RSK-006,,P-200,Single-source risk,mmWave module single-sourced at one Atlas site; no qualified alternate; supports the RF tester line,10,9500000,Severe,20,Open,High,Largest single risk in the portfolio; dual-source scenario addresses
-RSK-007,SUP-PAC,,Natural-disaster risk,Earthquake or typhoon interrupts Kaohsiung operations,6,7200000,Severe,10,Partially mitigated,Medium,Business continuity plan on file; recovery estimated 10 weeks
-RSK-008,SUP-PAC,,Capacity risk,Site at 86% utilization; upside demand may exceed feasible volume,18,1400000,Medium,8,Monitoring,High,Expansion decision pending
-RSK-009,SUP-ATL,,Cyber risk,Ransomware event at EMS interrupts production and test-data exchange,5,3000000,High,4,Partially mitigated,Low,Assessment scheduled
-RSK-010,SUP-MER,,Financial risk,Meridian parent leverage elevated; investment capacity constrained,7,2600000,Medium,16,Monitoring,Low,Financial health rated 3 of 5
-RSK-011,SUP-MER,,Contract risk,EMS-owned test fixtures and correlation hardware raise switching cost and exit friction,30,620000,Medium,12,Open,High,Tooling ownership sits with the EMS
-RSK-012,SUP-PAC,P-400,Component concentration,Single spring-pin interposer source feeds the DIB family,9,1800000,High,10,Open,Medium,Second source under evaluation
+RSK-001,SUP-MER,,Country risk,Regional export disruption or extended port congestion affecting Penang shipments,8,78000000.0,Severe,8,Partially mitigated,Medium,Buffer stock covers about 3 weeks of tester builds
+RSK-002,SUP-MER,,Delivery risk,Chronic on-time-delivery shortfall slips tester integration and customer ship dates,15,33600000.0,High,4,Open,High,OTD at 90.5% versus 95% commitment
+RSK-003,SUP-MER,P-300,Quality risk,Yield deterioration on DPS modules drives field returns and warranty spike,12,19200000.0,Medium,6,Open,Medium,FPY trending down two quarters
+RSK-004,SUP-MER,,Data transparency risk,Bundled pricing conceals cost drivers; renegotiation and should-cost leverage limited,25,10800000.0,Medium,12,Open,High,No audit rights in contract
+RSK-005,SUP-ATL,,Labor risk,Guadalajara labor market tightening raises rates or slows the channel-card ramp,10,14400000.0,Medium,6,Monitoring,Medium,
+RSK-006,,P-200,Single-source risk,mmWave module single-sourced at one Atlas site; no qualified alternate; supports the RF tester line,10,114000000.0,Severe,20,Open,High,Largest single risk in the portfolio; dual-source scenario addresses
+RSK-007,SUP-PAC,,Natural-disaster risk,Earthquake or typhoon interrupts Kaohsiung operations,6,86400000.0,Severe,10,Partially mitigated,Medium,Business continuity plan on file; recovery estimated 10 weeks
+RSK-008,SUP-PAC,,Capacity risk,Site at 86% utilization; upside demand may exceed feasible volume,18,16800000.0,Medium,8,Monitoring,High,Expansion decision pending
+RSK-009,SUP-ATL,,Cyber risk,Ransomware event at EMS interrupts production and test-data exchange,5,36000000.0,High,4,Partially mitigated,Low,Assessment scheduled
+RSK-010,SUP-MER,,Financial risk,Meridian parent leverage elevated; investment capacity constrained,7,31200000.0,Medium,16,Monitoring,Low,Financial health rated 3 of 5
+RSK-011,SUP-MER,,Contract risk,EMS-owned test fixtures and correlation hardware raise switching cost and exit friction,30,7440000.0,Medium,12,Open,High,Tooling ownership sits with the EMS
+RSK-012,SUP-PAC,P-400,Component concentration,Single spring-pin interposer source feeds the DIB family,9,21600000.0,High,10,Open,Medium,Second source under evaluation

@@ -1,5 +1,5 @@
 lane_id,supplier_id,site_id,origin,destination,incoterms,freight_mode,freight_cost_per_unit,expedite_freight_cost_per_unit,expedite_frequency_pct,insurance_pct,brokerage_per_shipment,shipments_per_month,units_per_shipment,duty_rate_pct,tariff_rate_pct,packaging_cost_per_unit,handling_cost_per_unit,warehousing_cost_per_unit,transit_days,freight_paid_by,confidence,notes
-LANE-ATL-GDL,SUP-ATL,SITE-ATL-GDL,Guadalajara MX,Boston MA,FCA,Truck,58.00,190.00,2,0.15,380,6,45,0,0,42.00,28.00,18.00,5,OEM,High,USMCA duty-free; instrument-grade crating; 5-day ground
-LANE-ATL-AUS,SUP-ATL,SITE-ATL-AUS,Austin TX,Boston MA,FCA,Truck,36.00,120.00,1,0.10,0,2,25,0,0,35.00,24.00,15.00,3,OEM,High,Domestic NPI lane
-LANE-MER-PEN,SUP-MER,SITE-MER-PEN,Penang MY,Boston MA,FOB,Ocean,118.00,520.00,9,0.25,520,4,90,0,4.5,55.00,38.00,30.00,32,OEM,Medium,Tariff exposure on subset of HTS codes; frequent air expedites on heavy boards
-LANE-PAC-KAO,SUP-PAC,SITE-PAC-KAO,Kaohsiung TW,Boston MA,FOB,Ocean + air mix,105.00,440.00,4,0.22,480,4,60,0,2.0,48.00,34.00,26.00,21,OEM,High,
+LANE-ATL-GDL,SUP-ATL,SITE-ATL-GDL,Guadalajara MX,Boston MA,FCA,Truck,58.0,190.0,2,0.15,380,50.0,100.0,0,0.0,42.0,28.0,18.0,5,OEM,High,USMCA duty-free; instrument-grade crating; 5-day ground
+LANE-ATL-AUS,SUP-ATL,SITE-ATL-AUS,Austin TX,Boston MA,FCA,Truck,36.0,120.0,1,0.1,0,4.0,30.0,0,0.0,35.0,24.0,15.0,3,OEM,High,Domestic NPI lane
+LANE-MER-PEN,SUP-MER,SITE-MER-PEN,Penang MY,Boston MA,FOB,Ocean,118.0,520.0,9,0.25,520,30.0,150.0,0,4.5,55.0,38.0,30.0,32,OEM,Medium,Tariff exposure on subset of HTS codes; frequent air expedites on heavy boards
+LANE-PAC-KAO,SUP-PAC,SITE-PAC-KAO,Kaohsiung TW,Boston MA,FOB,Ocean + air mix,105.0,440.0,4,0.22,480,20.0,100.0,0,2.0,48.0,34.0,26.0,21,OEM,High,

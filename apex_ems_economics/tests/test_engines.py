@@ -65,9 +65,9 @@ def test_conversion_cost_components(data):
 # ---------------------------------------------------------------- tier pricing
 def test_volume_tier_pricing(data):
     quote = get_quote(data, "SUP-ATL", "P-100")
-    assert tier_unit_price(quote, 1000) == 11400    # below tier 2
-    assert tier_unit_price(quote, 1800) == 11050    # tier 2 (>= 1500)
-    assert tier_unit_price(quote, 3000) == 10750    # tier 3 (>= 2400)
+    assert tier_unit_price(quote, 15000) == 11400   # below tier 2
+    assert tier_unit_price(quote, 27000) == 11050   # tier 2 (>= 22000)
+    assert tier_unit_price(quote, 40000) == 10750   # tier 3 (>= 35000)
 
 
 # ---------------------------------------------------------------- quality
@@ -79,7 +79,7 @@ def test_quality_copq_and_good_units(data, settings):
     # OEM-borne can never exceed total.
     assert result["oem_copq"] <= result["total_copq"] + 1e-6
     # Expected recall = probability x impact x share.
-    assert result["expected_recall_cost"] == pytest.approx(0.008 * 6_000_000)
+    assert result["expected_recall_cost"] == pytest.approx(0.008 * 72_000_000)
 
 
 def test_quality_responsibility_shifts_oem_share(data, settings):
@@ -220,8 +220,8 @@ def test_inventory_ownership_conversion_override(data):
     converted = inv[inv["inv_id"] == "INV-001-EMS"]
     assert not converted.empty
     # 40% of the consigned pool converts to EMS ownership in SCN-003.
-    assert float(original["quantity"]) == pytest.approx(4200 * 0.6)
-    assert float(converted.iloc[0]["quantity"]) == pytest.approx(4200 * 0.4)
+    assert float(original["quantity"]) == pytest.approx(63000 * 0.6)
+    assert float(converted.iloc[0]["quantity"]) == pytest.approx(63000 * 0.4)
     assert converted.iloc[0]["ownership"] == "EMS"
 
 

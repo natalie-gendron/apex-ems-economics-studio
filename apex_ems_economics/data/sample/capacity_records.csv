@@ -1,5 +1,5 @@
 site_id,supplier_id,available_capacity_units,committed_capacity_units,utilization_pct,max_utilization_pct,overtime_capacity_units,expansion_capacity_units,expansion_lead_time_months,reserved_capacity_units,reservation_fee_annual,min_economic_volume,max_feasible_volume,ramp_rate_units_per_month,transfer_lead_time_weeks,qualification_lead_time_weeks,constraint_notes
-SITE-ATL-GDL,SUP-ATL,9000,3200,81,90,500,1500,9,800,350000,600,9500,180,20,16,Golden-tester correlation capacity is the binding constraint; boards per year
-SITE-ATL-AUS,SUP-ATL,900,300,33,85,120,400,6,0,0,80,1000,60,10,10,NPI and low-volume high-mix center
-SITE-MER-PEN,SUP-MER,16000,8200,74,92,900,2600,12,0,0,1200,16900,400,24,20,Labor availability tightens in Q4; high-mix changeover losses
-SITE-PAC-KAO,SUP-PAC,4800,2750,86,90,280,900,10,450,260000,500,5080,140,22,18,Running close to max utilization; expansion decision pending
+SITE-ATL-GDL,SUP-ATL,135000.0,48000.0,81,90,7500.0,22500.0,9,12000.0,2800000.0,9000.0,142500.0,2700.0,20,16,Golden-tester correlation capacity is the binding constraint; boards per year
+SITE-ATL-AUS,SUP-ATL,13500.0,4500.0,33,85,1800.0,6000.0,6,0.0,0.0,1200.0,15000.0,900.0,10,10,NPI and low-volume high-mix center
+SITE-MER-PEN,SUP-MER,240000.0,123000.0,74,92,13500.0,39000.0,12,0.0,0.0,18000.0,253500.0,6000.0,24,20,Labor availability tightens in Q4; high-mix changeover losses
+SITE-PAC-KAO,SUP-PAC,72000.0,41250.0,86,90,4200.0,13500.0,10,6750.0,2080000.0,7500.0,76200.0,2100.0,22,18,Running close to max utilization; expansion decision pending

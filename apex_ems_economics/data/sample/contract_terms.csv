@@ -48,7 +48,7 @@ CT-MER-SCR,SUP-MER,Quality,scrap_responsibility,Shared,,Estimated,Claims history
 CT-MER-WAR,SUP-MER,Quality,warranty_responsibility,OEM,,Inferred,Claims history,Low,Warranty responsibility not defined; OEM absorbing
 CT-MER-TRM,SUP-MER,Contract risk,termination_notice_days,90,days,Confirmed,Supply agreement 2023 section 11,High,
 CT-MER-TOOL,SUP-MER,Contract risk,tooling_ownership,EMS,,Confirmed,Supply agreement 2023 section 8,High,EMS owns test fixtures; increases switching cost
-CT-MER-MINV,SUP-MER,Volume,minimum_annual_volume_units,3000,units,Confirmed,Supply agreement 2023 section 3.2,High,Take-or-pay style minimum on P-300 DPS modules
+CT-MER-MINV,SUP-MER,Volume,minimum_annual_volume_units,45000,units,Confirmed,Supply agreement 2023 section 3.2,High,Take-or-pay style minimum on P-300 DPS modules
 CT-PAC-PAY,SUP-PAC,Inventory & liability,payment_terms_days,75,days,Confirmed,MSA 2024 section 8,High,Net 75; best-in-class terms
 CT-PAC-ADV,SUP-PAC,Inventory & liability,advance_payment_pct,0,%,Confirmed,MSA 2024 section 8,High,
 CT-PAC-RAW,SUP-PAC,Inventory & liability,raw_material_ownership,EMS-owned until finished-goods transfer,,Confirmed,MSA 2024 exhibit B,High,Pacific funds all material until FG ships

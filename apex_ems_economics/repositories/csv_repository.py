@@ -18,6 +18,7 @@ ENTITY_FILES: Dict[str, str] = {
     "suppliers": "suppliers.csv",
     "sites": "sites.csv",
     "products": "products.csv",
+    "tester_platforms": "tester_platforms.csv",
     "scenarios": "scenarios.csv",
     "allocations": "allocations.csv",
     "supplier_quotes": "supplier_quotes.csv",

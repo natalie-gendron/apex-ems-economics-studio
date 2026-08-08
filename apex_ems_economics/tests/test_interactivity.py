@@ -26,7 +26,7 @@ def test_scenario_selector_drives_executive_overview():
 
 
 def test_should_cost_method_drives_comparison_table():
-    at = _page("07_Should_Cost_Model.py")
+    at = _page("08_Should_Cost_Model.py")
     process_values = at.dataframe[0].value["should_cost"].tolist()
     at.radio[0].set_value("Level 1 — High-level benchmark").run()
     assert not at.exception
@@ -37,7 +37,7 @@ def test_should_cost_method_drives_comparison_table():
 
 
 def test_scenario_multiselect_drives_comparison_page():
-    at = _page("15_Scenario_Comparison.py")
+    at = _page("16_Scenario_Comparison.py")
     rows_before = len(at.dataframe[0].value)
     at.multiselect[0].set_value(["SCN-001", "SCN-003"]).run()
     assert not at.exception
@@ -46,7 +46,7 @@ def test_scenario_multiselect_drives_comparison_page():
 
 
 def test_scenario_selector_drives_inventory_page():
-    at = _page("08_Inventory_and_Working_Capital.py")
+    at = _page("09_Inventory_and_Working_Capital.py")
     at.selectbox(key="scenario_select").select("SCN-003").run()
     assert not at.exception
     # SCN-003 (renegotiated terms) must be reflected in the scenario WC table.

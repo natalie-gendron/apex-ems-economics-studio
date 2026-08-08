@@ -141,6 +141,23 @@ class Site(BaseModel):
     notes: str = ""
 
 
+class TesterPlatform(BaseModel):
+    """A shippable end system (tester) or program the boards are consumed by.
+
+    The OEM ships systems; the EMS builds the boards that go into them. Board
+    demand = systems shipped x QPA (quantity per assembly).
+    """
+    platform_id: str
+    platform_name: str
+    platform_type: str = "Tester platform"
+    family: str = ""
+    annual_units: float = 0          # systems shipped per year
+    asp_usd: float = 0               # average selling price per system shipped
+    final_assembly_location: str = ""
+    description: str = ""
+    notes: str = ""
+
+
 class Product(BaseModel):
     product_id: str
     product_family: str
@@ -164,6 +181,8 @@ class Product(BaseModel):
     product_priority: str = "Standard"
     transfer_complexity: str = "Medium"
     material_model: str = "EMS turnkey"
+    platform_id: str = ""            # end system this board ships into
+    boards_per_tester: float = 0     # QPA: quantity per system shipped
     notes: str = ""
 
 

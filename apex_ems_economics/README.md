@@ -111,6 +111,7 @@ apex_ems_economics/
 │   └── 18_Executive_Evidence_Package.py
 ├── core/                         # Deterministic engines (UI-independent, importable)
 │   ├── economics_engine.py       #   quote → true economic cost; bridges; scenario deltas
+│   ├── platform_engine.py        #   board economics → cost per system shipped (QPA ship-sets)
 │   ├── scenario_engine.py        #   baseline + overrides (absolute/multiplier/delta)
 │   ├── inventory_engine.py       #   ownership×location, carrying cost, WC cost
 │   ├── quality_engine.py         #   COPQ with contractual responsibility shares
@@ -157,12 +158,36 @@ a major ATE player:
 | True economic cost | $1.27B |
 | OEM-owned inventory / total supply exposure | $176M / $286M |
 
-The portfolio is ATE-class: a 256-channel pin-electronics channel card (27,000/yr, ~$18K
-all-in), a mmWave source & measure module (6,800/yr, ~$30K), a device power supply
-(54,000/yr), a 36-layer device interface board (18,000/yr), and two subassemblies — with
-consigned strategic ASIC/mmWave silicon and golden-tester correlation time as the
-dominant conversion driver. Products represent **family aggregates**, not single part
-numbers.
+### What the company ships vs what the EMS builds
+
+Novatron **ships test systems**; the EMS partners **build the boards** that go into them.
+Final assembly, system integration, calibration, correlation, and system test are done
+**in-house** and are outside the EMS scope (they appear only as a labeled per-system
+assumption so margin closes). Board demand bridges the two through QPA — quantity per
+assembly:
+
+```
+annual board demand = systems shipped × QPA
+ship-set cost       = Σ over boards of (QPA × board cost per good unit)
+```
+
+| Platform | Systems shipped/yr | Ship-set (QPA) | ASP | Quoted ship-set | True EMS content | Hidden cost/system | GM% |
+|---|---|---|---|---|---|---|---|
+| Nova-D9000 digital tester | 900 | 30 channel cards + 60 power supplies | $3.02M | $580K | **$927K** | **+$347K** | 59% |
+| Nova-RF7000 mmWave tester | 850 | 8 mmWave modules | $944K | $101K | **$248K** | **+$147K** | 64% |
+| Device interface products | 18,000 boards | 1 per device program | $26.5K | $7.8K | $9.3K | +$1.5K | 55% |
+
+The **hidden cost per system** — what the quoted ship-set misses once logistics, duties,
+quality, working capital, service, and expected risk are counted — is the number this
+studio exists to expose: $347K on every digital tester shipped.
+
+Boards are ATE-class: a 256-channel pin-electronics channel card (~$18.7K all-in), a
+mmWave source & measure module (~$31K), a device power supply, a 36-layer device
+interface board, plus two subassemblies. Consigned strategic ASIC/mmWave silicon and
+golden-tester correlation time dominate the economics. Products represent **family
+aggregates**, not single part numbers. Subassemblies are modeled as their own supplier
+flows but excluded from ship-sets, since their cost already sits inside the parent
+board's BOM.
 
 | Supplier | Profile |
 |---|---|
@@ -240,7 +265,10 @@ all 19 Streamlit pages headlessly.
   risks.
 - Subassembly costs are not rolled up into parent-product economics (each is modeled as
   its own flow); consigned-subassembly linkage (SA-210 → P-200) is represented through
-  BOM consignment.
+  BOM consignment, and subassemblies are excluded from platform ship-sets to prevent
+  double counting.
+- In-house final assembly, integration, and system test are a single labeled percent-of-
+  revenue assumption (`internal_cogs_pct_of_revenue`), not a modeled cost centre.
 - Volume-tier pricing evaluates annual volume at the allocated supplier, using
   product-level annual volume for tier qualification.
 - PDF export deferred (Excel package is the v1 artifact).

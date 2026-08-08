@@ -35,6 +35,7 @@ DEFAULTS: Dict[str, float] = {
     "mc_default_iterations": 500.0,
     "mc_default_seed": 42.0,
     "gross_margin_reference_pct": 54.0,
+    "internal_cogs_pct_of_revenue": 10.0,
 }
 
 

@@ -28,7 +28,9 @@ pytest                           # 41 tests
 
 ## Highlights
 
-- Deterministic quote → true-economic-cost engine (18 Streamlit pages, UI-free core)
+- Deterministic quote → true-economic-cost engine (19 Streamlit pages, UI-free core)
+- **Cost per system shipped**: board economics roll up through QPA into ship-set cost,
+  exposing $347K of hidden cost on every digital tester shipped
 - Inventory **ownership modeled separately from physical location** (consignment economics)
 - Contract economics: payment terms, advances, NCNR/liability windows, volume tiers
 - Three-level should-cost with cautious variance interpretation

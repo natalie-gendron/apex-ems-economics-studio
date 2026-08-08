@@ -265,6 +265,38 @@ def test_end_to_end_sample_scenarios(data, settings):
         assert res.totals["total_economic_cost"] > res.totals["quoted_cost"]
 
 
+# ---------------------------------------------------------------- platform rollup
+def test_platform_rollup_ship_set_math(data, baseline, settings):
+    """Systems x QPA must reconcile to board demand, and ship-sets must not
+    double count subassemblies already carried inside parent BOMs."""
+    from core.platform_engine import platform_rollup, ship_set_detail, subassembly_note
+
+    rollup = platform_rollup(data, baseline, settings)
+    assert not rollup.empty
+    d9000 = rollup[rollup["platform_id"] == "PLT-D9000"].iloc[0]
+
+    # systems shipped x QPA == annual board demand for every board on the platform
+    detail = ship_set_detail(data, baseline, "PLT-D9000")
+    for _, row in detail.iterrows():
+        assert row["annual_board_demand"] == pytest.approx(
+            d9000["systems_shipped_per_year"] * row["qpa_per_system"])
+
+    # ship-set cost is the QPA-weighted sum of board economics
+    assert d9000["ems_content_per_system"] == pytest.approx(
+        detail["economic_extended_per_system"].sum())
+    # true economic content always exceeds the quoted ship-set
+    assert d9000["ems_content_per_system"] > d9000["quoted_ship_set_per_system"]
+    assert d9000["ems_premium_per_system"] > 0
+
+    # subassemblies are excluded from the ship-set (no double counting)
+    subs = subassembly_note(data, baseline)
+    assert not subs.empty
+    assert not set(subs["product_id"]).intersection(set(detail["product_id"]))
+
+    # margin closes into a plausible ATE range once in-house content is added
+    assert 45 < d9000["gross_margin_pct"] < 75
+
+
 # ---------------------------------------------------------------- validation & DQ
 def test_validation_runs_and_flags_sample_issues(data):
     issues = validate(data)

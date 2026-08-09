@@ -1,9 +1,12 @@
 """Page 18: Executive Evidence Package - downloadable decision support."""
+from datetime import date
+
 import pandas as pd
 import streamlit as st
 
 from components.formatting import fmt_currency_compact
-from components.state import baseline_id, get_data, page_setup, get_result
+from components.state import (baseline_id, editable_table, get_data, get_result,
+                              page_setup, set_table)
 from core import integration_outputs, risk_engine
 from core.economics_engine import compare_scenarios
 from core.recommendation_engine import recommend
@@ -34,6 +37,41 @@ recommended = st.selectbox("Recommended scenario", scenarios["scenario_id"].toli
                            index=min(2, len(scenarios) - 1),
                            format_func=lambda s: names.get(s, s))
 owner = st.text_input("Decision owner", value="VP Operations Finance")
+
+col1, col2 = st.columns([1, 3])
+if col1.button("Record this decision", type="secondary"):
+    records = data["decision_records"].copy()
+    existing = records["decision_statement"].astype(str) == decision
+    row = {
+        "decision_id": (f"DEC-{len(records) + 1:03d}" if not existing.any()
+                        else records.loc[existing, "decision_id"].iloc[0]),
+        "decision_statement": decision,
+        "recommended_scenario_id": recommended,
+        "decision_owner": owner,
+        "decision_date": date.today().isoformat(),
+        "status": "Recorded",
+        "rationale": recs[0]["why"] if recs else "",
+        "conditions": recs[0]["required_conditions"] if recs else "",
+        "notes": f"Data-confidence {dq['overall_score']:.0f}/100; "
+                 f"year-1 economic delta ${delta_total:,.0f}",
+    }
+    if existing.any():
+        for k, v in row.items():
+            records.loc[existing, k] = v
+    else:
+        records = pd.concat([records, pd.DataFrame([row])], ignore_index=True)
+    set_table("decision_records", records)
+    st.success("Decision recorded in the decision register below.")
+    st.rerun()
+col2.caption("Recording writes the decision, owner, recommended scenario, rationale, and "
+             "data-confidence into the decision register - the audit trail for why this call "
+             "was made with the numbers available at the time.")
+
+st.subheader("Decision register")
+editable_table("decision_records", column_config={
+    "status": st.column_config.SelectboxColumn(
+        "Status", options=["Draft", "Recorded", "Approved", "Superseded", "Rejected"]),
+})
 
 rec_result = results[recommended]
 base_result = results[base_id]

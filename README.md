@@ -23,12 +23,14 @@ python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py             # run the app
-pytest                           # 49 tests
+pytest                           # 52 tests
 ```
 
 ## Highlights
 
-- Deterministic quote → true-economic-cost engine (19 Streamlit pages, UI-free core)
+- Deterministic quote → true-economic-cost engine (20 Streamlit pages, UI-free core)
+- **Every assumption editable in the app** — 23 data tables plus a grouped Model
+  Settings page; nothing that moves a dollar is buried in code
 - Full per-system COGS: EMS ship-set + itemized purchased system material + labeled in-house
   conversion, with an EMS box-build make-vs-buy scenario
 - **Cost per system shipped**: board economics roll up through QPA into ship-set cost,

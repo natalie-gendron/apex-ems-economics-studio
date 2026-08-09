@@ -20,7 +20,12 @@ def recommend(
     results: Dict[str, ScenarioResult],
     baseline_id: str,
     data_quality: Dict[str, float] | None = None,
+    settings: Dict[str, float] | None = None,
 ) -> List[Dict[str, str]]:
+    from core.config import load_settings
+
+    settings = settings or load_settings(data)
+    fpy_threshold = settings.get("fpy_attention_threshold_pct", 94.0)
     recs: List[Dict[str, str]] = []
     base = results.get(baseline_id)
     if base is None or base.line_items.empty:
@@ -116,10 +121,10 @@ def recommend(
             if rows.empty:
                 continue
             fpy = rows["first_pass_yield_pct"].astype(float).mean()
-            if fpy < 94.0:
+            if fpy < fpy_threshold:
                 recs.append({
                     "action": f"Improve quality at {_supplier_name(data, sid)} before shifting more volume",
-                    "why": f"Average first-pass yield is {fpy:.1f}% - added volume would amplify OEM-borne COPQ.",
+                    "why": f"Average first-pass yield is {fpy:.1f}%, below the {fpy_threshold:.0f}% attention threshold - added volume would amplify OEM-borne COPQ.",
                     "financial_impact": "COPQ scales with volume; see Quality Economics page.",
                     "operational_impact": "Joint corrective-action program required.",
                     "key_risks": "Yield may degrade further during any ramp.",

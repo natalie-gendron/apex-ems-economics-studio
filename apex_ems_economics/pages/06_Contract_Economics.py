@@ -26,6 +26,28 @@ if not terms.empty:
         st.dataframe(inferred[["supplier_id", "category", "term_name", "status", "confidence", "notes"]],
                      hide_index=True, width="stretch")
 
+st.subheader("Supplier quotes (pricing terms)")
+st.caption(
+    "Quoted prices, volume tiers, and what each quote includes. Quotes cover the **EMS scope "
+    "only** — OEM-consigned material is excluded and added separately by the engine. Tick "
+    "`includes_freight` / `includes_duties` only when the quote genuinely contains them; the "
+    "engine then stops adding those costs so they are never double counted.")
+editable_table("supplier_quotes", column_config={
+    "base_unit_price": st.column_config.NumberColumn("Base unit price", format="$%,.0f"),
+    "tier2_min_qty": st.column_config.NumberColumn("Tier 2 min qty", format="%,.0f"),
+    "tier2_unit_price": st.column_config.NumberColumn("Tier 2 price", format="$%,.0f"),
+    "tier3_min_qty": st.column_config.NumberColumn("Tier 3 min qty", format="%,.0f"),
+    "tier3_unit_price": st.column_config.NumberColumn("Tier 3 price", format="$%,.0f"),
+    "quoted_material_content": st.column_config.NumberColumn("Quoted material", format="$%,.0f"),
+    "quoted_conversion_content": st.column_config.NumberColumn("Quoted conversion", format="$%,.0f"),
+    "includes_freight": st.column_config.CheckboxColumn("Incl. freight"),
+    "includes_duties": st.column_config.CheckboxColumn("Incl. duties"),
+    "status": st.column_config.SelectboxColumn("Status", options=[
+        "Confirmed", "Estimated", "Inferred", "Missing", "Not applicable"]),
+    "confidence": st.column_config.SelectboxColumn("Confidence", options=["High", "Medium", "Low"]),
+})
+
+st.divider()
 st.subheader("Contract term register")
 supplier_filter = st.multiselect(
     "Filter suppliers", terms["supplier_id"].unique().tolist() if not terms.empty else [])

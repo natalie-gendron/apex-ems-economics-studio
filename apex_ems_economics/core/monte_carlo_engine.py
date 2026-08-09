@@ -61,11 +61,12 @@ def _mult_products_volume(data: Dict[str, pd.DataFrame], x: float) -> None:
 def _mult_bom_prices(data: Dict[str, pd.DataFrame], x: float) -> None:
     if not data["bom_items"].empty:
         data["bom_items"]["unit_price"] = data["bom_items"]["unit_price"].astype(float) * x
-    # Material moves also flow into quoted prices (pass-through approximation:
-    # material is ~2/3 of a turnkey quote, so quote moves by 2/3 of the swing).
+    # Material moves also flow into quoted prices at the configured pass-through rate.
+    passthrough = load_settings(data).get("mc_material_passthrough_pct", 67.0) / 100.0
     for col in ("base_unit_price", "tier2_unit_price", "tier3_unit_price"):
         data["supplier_quotes"][col] = (
-            pd.to_numeric(data["supplier_quotes"][col], errors="coerce") * (1 + (x - 1) * 0.67))
+            pd.to_numeric(data["supplier_quotes"][col], errors="coerce")
+            * (1 + (x - 1) * passthrough))
 
 
 def _mult_freight(data: Dict[str, pd.DataFrame], x: float) -> None:
@@ -83,7 +84,8 @@ def _delta_yield(data: Dict[str, pd.DataFrame], x: float) -> None:
     """x is a yield delta in points applied to FPY/final yield (bounded)."""
     qm = data["quality_metrics"]
     qm["final_yield_pct"] = (qm["final_yield_pct"].astype(float) + x).clip(50, 100)
-    qm["scrap_rate_pct"] = (qm["scrap_rate_pct"].astype(float) - x * 0.5).clip(0, 100)
+    coupling = load_settings(data).get("mc_yield_scrap_coupling", 0.5)
+    qm["scrap_rate_pct"] = (qm["scrap_rate_pct"].astype(float) - x * coupling).clip(0, 100)
 
 
 def _mult_tariff(data: Dict[str, pd.DataFrame], x: float) -> None:

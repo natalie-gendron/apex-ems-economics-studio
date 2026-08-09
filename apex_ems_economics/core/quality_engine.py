@@ -10,7 +10,7 @@ Annual formulas for a product-supplier flow of ``volume`` units at
     scrap_cost      = volume x scrap_rate x unit_price
     rework_cost     = volume x rework_rate x rework_hours x rework_rate_usd
     retest_cost     = volume x rework_rate x retest_cost_per_unit
-    return_cost     = volume x return_rate x unit_price x 0.5   (handling+refurb)
+    return_cost     = volume x return_rate x unit_price x return_handling_factor
     warranty_cost   = volume x warranty_rate x unit_price
     field_failure   = volume x field_failure_rate x unit_price x repair_multiplier
     downtime_cost   = downtime_hours x downtime_cost_per_hour x volume_share
@@ -80,7 +80,8 @@ def copq(
     scrap = volume * f("scrap_rate_pct") / 100.0 * unit_price
     rework = volume * f("rework_rate_pct") / 100.0 * f("rework_hours_per_unit") * f("rework_labor_rate")
     retest = volume * f("rework_rate_pct") / 100.0 * f("retest_cost_per_unit")
-    returns = volume * f("return_rate_pct") / 100.0 * unit_price * 0.5
+    return_factor = settings.get("quality_return_handling_factor", 0.5)
+    returns = volume * f("return_rate_pct") / 100.0 * unit_price * return_factor
     warranty = volume * f("warranty_rate_pct") / 100.0 * unit_price
     field_failure = volume * f("field_failure_rate_pct") / 100.0 * unit_price * repair_mult
     downtime = f("downtime_hours_per_year") * f("downtime_cost_per_hour") * volume_share

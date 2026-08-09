@@ -2,7 +2,8 @@
 import streamlit as st
 
 from components.executive_cards import formula_expander
-from components.state import get_data, page_setup
+from components.state import get_data, get_settings, page_setup, set_table
+from core.config import benchmark_structure
 from core.should_cost_engine import (
     DEFAULT_BENCHMARK_STRUCTURE, benchmark_should_cost, comparison_table,
     level1_benchmark, variance_analysis)
@@ -11,6 +12,7 @@ page_setup("Should-Cost Model",
            "Three levels of should-cost detail, compared with quotes, standard cost, and peers.")
 
 data = get_data()
+settings = get_settings()
 products = data["products"]
 product_id = st.selectbox(
     "Product", products["product_id"].tolist(),
@@ -37,13 +39,23 @@ structure = None
 if method.startswith("Level 1"):
     st.subheader("Benchmark cost structure (EMS quote scope)")
     cols = st.columns(5)
+    stored = benchmark_structure(settings)
     structure = {}
-    for col, (key, default) in zip(cols, DEFAULT_BENCHMARK_STRUCTURE.items()):
+    for col, (key, default) in zip(cols, stored.items()):
         structure[key] = col.number_input(key.replace("_pct", " %"), value=float(default),
-                                          min_value=0.0, max_value=100.0)
+                                          min_value=0.0, max_value=100.0, key=f"bench_{key}")
     total_pct = sum(structure.values())
     if abs(total_pct - 100) > 0.01:
         st.warning(f"Structure sums to {total_pct:.0f}% (expected 100%).")
+    if structure != stored:
+        if st.button("Save this structure as the model default"):
+            gs = data["global_settings"].copy()
+            for key, val in structure.items():
+                gs.loc[gs["key"] == f"benchmark_{key}", "value"] = val
+            set_table("global_settings", gs)
+            st.rerun()
+        st.caption("Unsaved: these percentages apply to this view only until saved as the "
+                   "model default (then they persist and appear on **Model Settings**).")
     bench = benchmark_should_cost(data, product_id, structure)
     if bench["should_cost"] == bench["should_cost"]:  # not NaN
         st.caption(f"Benchmark should-cost = EMS material ${bench['ems_material']:,.0f} "
@@ -58,7 +70,7 @@ engine_key = "benchmark" if method.startswith("Level 1") else "process"
 comp = comparison_table(data, product_id, method=engine_key, structure=structure)
 
 # Level 3 gate: detailed bottom-up requires high-confidence data coverage.
-LEVEL3_COVERAGE_THRESHOLD = 0.7
+LEVEL3_COVERAGE_THRESHOLD = settings.get("level3_bom_coverage_threshold_pct", 70.0) / 100.0
 if method.startswith("Level 3") and not comp.empty:
     coverage = float(comp.iloc[0]["bom_high_confidence_share"])
     if coverage < LEVEL3_COVERAGE_THRESHOLD:
@@ -104,7 +116,7 @@ else:
     st.subheader("Variance interpretation by supplier")
     supplier = st.selectbox("Supplier", comp["supplier_id"].tolist(),
                             format_func=lambda s: comp.set_index("supplier_id").loc[s, "supplier_name"])
-    va = variance_analysis(data, product_id, supplier, volume)
+    va = variance_analysis(data, product_id, supplier, volume, settings)
     if va.empty:
         st.info("No quote for this supplier.")
     else:
@@ -121,7 +133,7 @@ formula_expander("Should-cost variance", """
 Level 1 benchmark should-cost = estimated EMS material ÷ benchmark material share
 Level 2/3 process should-cost = EMS-scope BOM material + modeled conversion
 Should-cost variance          = supplier quoted cost − selected should-cost
-Confidence-adjusted opportunity = variance × BOM-confidence share × 0.6 (heuristic)
+Confidence-adjusted opportunity = variance × BOM-confidence share × commercial share (setting)
 ```
 Distinguished outcomes: likely commercial opportunity · possible specification difference ·
 possible volume difference (tier gap) · possible quality or service premium · possible logistics

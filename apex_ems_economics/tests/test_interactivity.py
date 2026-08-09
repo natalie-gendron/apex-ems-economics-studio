@@ -52,3 +52,36 @@ def test_scenario_selector_drives_inventory_page():
     # SCN-003 (renegotiated terms) must be reflected in the scenario WC table.
     assert any("SCN-003" in str(h) or "Renegotiate" in str(h)
                for h in [s.value for s in at.subheader])
+
+
+def test_every_entity_is_editable_somewhere():
+    """Guardrail: no data table may be reachable only by hand-editing a CSV."""
+    import glob
+    import re
+
+    from repositories.csv_repository import ENTITY_FILES
+
+    sources = "".join(open(f).read() for f in glob.glob(os.path.join(ROOT, "pages", "*.py")))
+    editable = set(re.findall(r'editable_table\(\s*"([a-z_]+)"', sources))
+    # global_settings has a bespoke grouped editor rather than editable_table().
+    editable.add("global_settings")
+    missing = [e for e in ENTITY_FILES if e not in editable]
+    assert not missing, f"entities with no UI editor: {missing}"
+
+
+def test_global_settings_changes_flow_into_the_engines():
+    """A settings edit must move real numbers, not just the settings table."""
+    from core.config import load_settings
+    from core.economics_engine import compute_scenario
+    from repositories.csv_repository import CsvRepository
+
+    data = CsvRepository().load_all()
+    base = compute_scenario(data, "SCN-001", load_settings(data))
+
+    bumped = {k: v.copy() for k, v in data.items()}
+    gs = bumped["global_settings"]
+    gs.loc[gs["key"] == "cost_of_capital_pct", "value"] = 16.0
+    after = compute_scenario(bumped, "SCN-001", load_settings(bumped))
+
+    # Doubling the cost of capital must raise working-capital cost.
+    assert after.totals["wc_cost"] > base.totals["wc_cost"]

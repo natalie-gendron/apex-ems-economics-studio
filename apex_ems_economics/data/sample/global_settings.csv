@@ -15,3 +15,14 @@ mc_default_iterations,500,runs,Default Monte Carlo iteration count
 mc_default_seed,42,seed,Default Monte Carlo random seed for reproducibility
 gross_margin_reference_pct,54,%,Portfolio average gross margin used for lost-margin estimates
 inhouse_conversion_pct_of_revenue,3.5,%,"In-house final assembly, system integration, calibration and system test LABOR AND OVERHEAD as a percent of system revenue - purchased system material is itemized separately in system_components"
+quality_return_handling_factor,0.5,x unit price,Share of unit price incurred handling and refurbishing a customer return (returns are repaired rather than scrapped)
+should_cost_commercial_share,0.6,x,"Share of unexplained should-cost variance attributed to commercial opportunity, scaled by BOM confidence - a negotiation-framing heuristic, not a measurement"
+level3_bom_coverage_threshold_pct,70,%,Minimum share of high-confidence BOM lines required before a Level 3 detailed bottom-up should-cost is considered supported by the data
+fpy_attention_threshold_pct,94,%,First-pass yield below which the recommendation engine flags quality improvement before any volume shift
+mc_material_passthrough_pct,67,%,Share of a material price move that passes through into supplier quoted prices in Monte Carlo runs
+mc_yield_scrap_coupling,0.5,x,Points of scrap-rate improvement per point of yield improvement in Monte Carlo runs
+benchmark_material_pct,68,%,Level 1 benchmark cost structure - material share of an EMS-scope quote
+benchmark_labor_pct,8,%,Level 1 benchmark cost structure - labor and conversion share
+benchmark_overhead_pct,12,%,Level 1 benchmark cost structure - overhead share
+benchmark_margin_pct,9,%,Level 1 benchmark cost structure - supplier margin share
+benchmark_other_pct,3,%,Level 1 benchmark cost structure - other share

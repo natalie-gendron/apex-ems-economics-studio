@@ -78,6 +78,12 @@ Questions it answers:
    status (Confirmed / Estimated / Benchmarked / Inferred / Missing / Stale) and a
    confidence level; a composite data-quality score qualifies every recommendation.
 
+6. **Every assumption is editable in the app.** All 23 data tables have a UI editor, and every
+   global assumption — carrying-cost components, cost of capital, quality responsibility
+   shares, should-cost heuristics, Monte Carlo couplings, benchmark cost structure — lives on
+   the **Model Settings** page with its unit and a plain-English description. Nothing that
+   changes a dollar figure is hidden in code. A test enforces this.
+
 ## Installation
 
 ```bash
@@ -104,11 +110,11 @@ pytest
 ```
 apex_ems_economics/
 ├── app.py                        # Home page: model health + data confidence
-├── pages/                        # 19 Streamlit pages (UI only, no business logic)
+├── pages/                        # 20 Streamlit pages (UI only, no business logic)
 │   ├── 01_Executive_Overview.py
 │   ├── 04_Tester_Platform_Rollup.py
 │   ├── ...
-│   └── 19_Executive_Evidence_Package.py
+│   └── 20_Executive_Evidence_Package.py
 ├── core/                         # Deterministic engines (UI-independent, importable)
 │   ├── economics_engine.py       #   quote → true economic cost; bridges; scenario deltas
 │   ├── platform_engine.py        #   board economics → cost per system shipped (QPA ship-sets)
@@ -135,7 +141,7 @@ apex_ems_economics/
 ├── components/                   # Streamlit widgets, charts, formatting
 ├── data/sample/                  # Fictional sample dataset (23 CSV entities)
 ├── data/templates/               # Blank headers for starting a fresh model
-└── tests/                        # 49 tests incl. end-to-end, interaction, and smoke tests
+└── tests/                        # 52 tests incl. end-to-end, interaction, and smoke tests
 ```
 
 **Architecture rules:** business logic lives only in `core/`; the engines take a plain
@@ -253,12 +259,13 @@ validation — extracted contract terms are created as *Inferred / Low confidenc
 
 ## Testing
 
-`pytest` runs 49 tests: unit tests for material/conversion/tier-pricing/quality/working
+`pytest` runs 52 tests: unit tests for material/conversion/tier-pricing/quality/working
 capital/risk/should-cost math, double-counting guards, yield-adjusted good units, platform
 ship-set and box-build reconciliation, scenario overrides (including inventory-ownership
 conversion), Monte Carlo reproducibility, an end-to-end test asserting the sample-data
 economics story, interaction tests proving key controls actually drive the numbers, and a
-smoke test that renders all 20 Streamlit pages headlessly. The suite is run against both
+smoke test that renders all 21 Streamlit pages headlessly, plus guardrails that every
+data table has a UI editor and that a settings edit actually moves engine output. The suite is run against both
 pandas 2.x and 3.x, since Streamlit Cloud resolves the newer major version.
 
 ## Known limitations (v1)

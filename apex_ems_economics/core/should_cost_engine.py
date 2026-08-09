@@ -164,7 +164,7 @@ VARIANCE_INTERPRETATIONS = [
 
 def variance_analysis(
     data: Dict[str, pd.DataFrame], product_id: str, supplier_id: str,
-    annual_volume: float,
+    annual_volume: float, settings: Optional[Dict[str, float]] = None,
 ) -> pd.DataFrame:
     """Quote vs should-cost variance with a cautious interpretation split.
 
@@ -176,6 +176,10 @@ def variance_analysis(
       * the remainer is split between commercial opportunity (when BOM
         confidence is high) and possible missing data (when it is low).
     """
+    from core.config import load_settings
+
+    settings = settings or load_settings(data)
+    commercial_share = settings.get("should_cost_commercial_share", 0.6)
     quote = economics_engine.get_quote(data, supplier_id, product_id)
     if quote is None:
         return pd.DataFrame()
@@ -188,7 +192,7 @@ def variance_analysis(
     confidence = sc["bom_high_confidence_share"]
     remainder = variance - volume_component
     if remainder > 0:
-        commercial = remainder * confidence * 0.6
+        commercial = remainder * confidence * commercial_share
         missing_data = remainder * (1 - confidence)
         unexplained = remainder - commercial - missing_data
     else:

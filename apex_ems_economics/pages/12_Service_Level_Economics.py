@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from components.executive_cards import formula_expander
+from components.tables import display_table
 from components.state import editable_table, get_data, get_result, get_settings, page_setup, scenario_selector
 from core.logistics_engine import get_lane
 from core.service_engine import get_service_row, service_cost
@@ -53,7 +54,7 @@ for _, line in result.line_items.iterrows():
     })
 df = pd.DataFrame(rows)
 money = [c for c in df.columns if c not in ("Product", "Supplier")]
-st.dataframe(df, hide_index=True, width="stretch", column_config={
+display_table(df, overrides={
     **{c: st.column_config.NumberColumn(c, format="$%,.0f") for c in money},
     "Service $/unit": st.column_config.NumberColumn("Service $/unit", format="$%,.2f")})
 st.caption("*Expected stockout cost is a probability-weighted lost-margin estimate (decision "
@@ -67,4 +68,4 @@ perf = sl[["supplier_id", "target_otd_pct", "actual_otd_pct",
            "target_lead_time_days", "actual_lead_time_days",
            "upside_flex_pct", "recovery_time_weeks"]].copy()
 perf["otd_gap_pts"] = perf["actual_otd_pct"] - perf["target_otd_pct"]
-st.dataframe(perf, hide_index=True, width="stretch")
+display_table(perf)

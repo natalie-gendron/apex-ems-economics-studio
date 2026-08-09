@@ -4,6 +4,7 @@ import streamlit as st
 
 from components.executive_cards import metric_row
 from components.formatting import fmt_pct
+from components.tables import display_table
 from components.state import get_data, get_settings, page_setup, set_table
 from core.config import CARRYING_COST_COMPONENTS, SETTING_GROUPS, carrying_cost_pct
 
@@ -62,12 +63,12 @@ for tab, (group, keys) in zip(tabs, SETTING_GROUPS.items()):
                     "That total is applied to average OEM-owned inventory everywhere in the "
                     "model — inventory, service (safety stock), and working capital.",
                     icon=":material/percent:")
-            st.dataframe(pd.DataFrame(
+            display_table(pd.DataFrame(
                 [{"Component": label, "Rate %": settings.get(key, 0.0)}
                  for key, label in CARRYING_COST_COMPONENTS]
-                + [{"Component": "Total", "Rate %": comp_rate}],
-            ), hide_index=True, width="stretch",
-                column_config={"Rate %": st.column_config.NumberColumn(format="%.2f%%")})
+                + [{"Component": "Total", "Rate %": comp_rate}]),
+                overrides={"Rate %": st.column_config.NumberColumn(
+                    "Rate %", format="%.2f%%")})
         if group == "Quality responsibility & cost":
             st.caption("Responsibility shares decide how much of each quality cost lands on the "
                        "OEM. The EMS-responsible share is deliberately above zero: even with full "

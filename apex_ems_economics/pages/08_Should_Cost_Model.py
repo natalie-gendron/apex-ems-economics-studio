@@ -2,6 +2,7 @@
 import streamlit as st
 
 from components.executive_cards import formula_expander
+from components.tables import display_table
 from components.state import get_data, get_settings, page_setup, set_table
 from core.config import benchmark_structure
 from core.should_cost_engine import (
@@ -86,7 +87,7 @@ if comp.empty:
     st.info("No quotes for this product.")
     st.stop()
 show_cols = [c for c in comp.columns if c != "bom_high_confidence_share"]
-st.dataframe(comp[show_cols], hide_index=True, width="stretch", column_config={
+display_table(comp[show_cols], overrides={
     "quoted_price": st.column_config.NumberColumn("Quoted price (EMS scope)", format="$%,.0f"),
     "should_cost": st.column_config.NumberColumn("Should-cost (EMS scope)", format="$%,.0f"),
     "consigned_material": st.column_config.NumberColumn("Consigned mat. (excluded)", format="$%,.0f"),
@@ -108,8 +109,7 @@ if method.startswith("Level 1"):
                "check, separate from the should-cost above.")
     for _, row in comp.iterrows():
         st.markdown(f"**{row['supplier_name']}** — quoted ${row['quoted_price']:,.0f}")
-        st.dataframe(level1_benchmark(row["quoted_price"], structure), hide_index=True,
-                     width="stretch", column_config={
+        display_table(level1_benchmark(row["quoted_price"], structure), overrides={
                          "pct": st.column_config.NumberColumn("% of quote", format="%.0f%%"),
                          "value": st.column_config.NumberColumn("Value", format="$%,.0f")})
 else:
@@ -120,7 +120,7 @@ else:
     if va.empty:
         st.info("No quote for this supplier.")
     else:
-        st.dataframe(va, hide_index=True, width="stretch", column_config={
+        display_table(va, overrides={
             "value": st.column_config.NumberColumn("Value $/unit", format="$%,.2f")})
         st.caption(
             "The split is heuristic, meant to structure the negotiation conversation: "

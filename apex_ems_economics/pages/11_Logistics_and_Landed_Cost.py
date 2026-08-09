@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from components.executive_cards import formula_expander
+from components.tables import display_table
 from components.state import editable_table, get_data, get_result, page_setup, scenario_selector
 from core.logistics_engine import get_lane, landed_cost_per_unit
 
@@ -54,7 +55,7 @@ for _, line in result.line_items.iterrows():
     })
 df = pd.DataFrame(rows)
 money = [c for c in df.columns if c not in ("Product", "Supplier")]
-st.dataframe(df, hide_index=True, width="stretch", column_config={
+display_table(df, overrides={
     **{c: st.column_config.NumberColumn(c, format="$%,.2f") for c in money},
     "Annual logistics + duties": st.column_config.NumberColumn(
         "Annual logistics + duties", format="$%,.0f")})

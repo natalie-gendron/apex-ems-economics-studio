@@ -2,6 +2,7 @@
 import streamlit as st
 
 from components.state import get_data, page_setup
+from components.tables import display_table
 from core.validation_engine import data_quality_score, validate
 
 page_setup(
@@ -47,9 +48,9 @@ with col1:
     c.metric("Data-quality flags", len(dq))
     if not errors.empty:
         st.error("Errors present - affected calculations may be unreliable:")
-        st.dataframe(errors, hide_index=True, width="stretch")
+        display_table(errors)
     with st.expander("All validation findings"):
-        st.dataframe(issues, hide_index=True, width="stretch")
+        display_table(issues)
 
 with col2:
     st.subheader("Data confidence")

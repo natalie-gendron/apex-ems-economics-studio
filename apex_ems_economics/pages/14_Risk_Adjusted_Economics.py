@@ -3,6 +3,7 @@ import streamlit as st
 
 from components.executive_cards import formula_expander, metric_row
 from components.formatting import fmt_currency_compact
+from components.tables import display_table
 from components.state import editable_table, get_data, get_result, page_setup, scenario_selector
 from core.risk_engine import risk_register_with_expected_cost
 from core.scoring_engine import supplier_scores, weights_valid
@@ -40,13 +41,11 @@ Supplier-level risks are allocated to products by spend share; product-level ris
 st.divider()
 register = risk_register_with_expected_cost(data)
 st.subheader("Expected risk cost ranking")
-st.dataframe(register[["risk_id", "supplier_id", "product_id", "category", "description",
-                       "probability_pct", "financial_impact_usd", "expected_cost",
-                       "mitigation_status", "confidence"]],
-             hide_index=True, width="stretch", column_config={
-                 "financial_impact_usd": st.column_config.NumberColumn("Impact", format="$%,.0f"),
-                 "expected_cost": st.column_config.NumberColumn("Expected cost", format="$%,.0f"),
-                 "probability_pct": st.column_config.NumberColumn("Prob %", format="%.0f%%")})
+display_table(register[["risk_id", "supplier_id", "product_id", "category", "description",
+                        "probability_pct", "financial_impact_usd", "expected_cost",
+                        "mitigation_status", "confidence"]],
+              overrides={"probability_pct": st.column_config.NumberColumn(
+                  "Probability", format="%.0f%%")})
 
 li = result.line_items
 if not li.empty:
@@ -71,5 +70,5 @@ risk_by_sup = li.groupby("supplier_id")["risk_cost"].sum() if not li.empty else 
 scores = supplier_scores(data, result.supplier_summary, risk_by_sup)
 if not scores.empty:
     score_cols = [c for c in scores.columns if c not in ("supplier_id", "supplier_name")]
-    st.dataframe(scores, hide_index=True, width="stretch", column_config={
+    display_table(scores, overrides={
         c: st.column_config.NumberColumn(c, format="%.0f") for c in score_cols})

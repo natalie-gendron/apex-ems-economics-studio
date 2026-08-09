@@ -5,6 +5,7 @@ import streamlit as st
 from components import charts
 from components.executive_cards import callout_grid, formula_expander, metric_row, top_list
 from components.formatting import fmt_currency_compact, fmt_pct
+from components.tables import display_table
 from components.state import baseline_id, get_data, get_result, page_setup, scenario_selector
 from core import risk_engine
 from core.economics_engine import compare_scenarios, cost_bridge
@@ -183,10 +184,8 @@ with col1:
     st.subheader("Product allocation")
     alloc = li[["product_name", "supplier_name", "allocation_pct", "volume",
                 "econ_cost_per_unit"]].copy()
-    st.dataframe(alloc, hide_index=True, width="stretch", column_config={
+    display_table(alloc, overrides={
         "allocation_pct": st.column_config.NumberColumn("Allocation", format="%.0f%%"),
-        "volume": st.column_config.NumberColumn("Volume", format="%,.0f"),
-        "econ_cost_per_unit": st.column_config.NumberColumn("Econ $/unit", format="$%,.0f"),
     })
 with col2:
     st.subheader("Scenario comparison summary")

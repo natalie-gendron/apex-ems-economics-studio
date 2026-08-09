@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from components.formatting import fmt_currency_compact
+from components.tables import display_table
 from components.state import (baseline_id, editable_table, get_data, get_result,
                               page_setup, set_table)
 from core import integration_outputs, risk_engine
@@ -177,21 +178,21 @@ st.caption("Standardized frames for the Executive SIOP Decision Engine, Manufact
 tab1, tab2, tab3, tab4 = st.tabs(["Product cost", "Inventory", "Margin", "Supply"])
 with tab1:
     df = integration_outputs.product_cost_output(rec_result)
-    st.dataframe(df, hide_index=True, width="stretch")
+    display_table(df)
     st.download_button("⬇ product_cost_output.csv", to_csv_bytes(df),
                        "product_cost_output.csv", mime="text/csv")
 with tab2:
     df = integration_outputs.inventory_output(rec_result, data)
-    st.dataframe(df, hide_index=True, width="stretch")
+    display_table(df)
     st.download_button("⬇ inventory_output.csv", to_csv_bytes(df),
                        "inventory_output.csv", mime="text/csv")
 with tab3:
     df = integration_outputs.margin_output(rec_result, base_result)
-    st.dataframe(df, hide_index=True, width="stretch")
+    display_table(df)
     st.download_button("⬇ margin_output.csv", to_csv_bytes(df),
                        "margin_output.csv", mime="text/csv")
 with tab4:
     df = integration_outputs.supply_output(rec_result, data)
-    st.dataframe(df, hide_index=True, width="stretch")
+    display_table(df)
     st.download_button("⬇ supply_output.csv", to_csv_bytes(df),
                        "supply_output.csv", mime="text/csv")

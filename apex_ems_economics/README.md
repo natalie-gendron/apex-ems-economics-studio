@@ -139,9 +139,10 @@ apex_ems_economics/
 │   ├── contract_parser_service.py#   contract text → draft terms (no API key needed)
 │   └── ai_insight_service.py     #   anomalies, narratives, assumption challenge
 ├── components/                   # Streamlit widgets, charts, formatting
+│   └── column_config.py          #   automatic friendly labels + currency/percent formats
 ├── data/sample/                  # Fictional sample dataset (23 CSV entities)
 ├── data/templates/               # Blank headers for starting a fresh model
-└── tests/                        # 52 tests incl. end-to-end, interaction, and smoke tests
+└── tests/                        # 54 tests incl. end-to-end, interaction, and smoke tests
 ```
 
 **Architecture rules:** business logic lives only in `core/`; the engines take a plain
@@ -259,13 +260,14 @@ validation — extracted contract terms are created as *Inferred / Low confidenc
 
 ## Testing
 
-`pytest` runs 52 tests: unit tests for material/conversion/tier-pricing/quality/working
+`pytest` runs 54 tests: unit tests for material/conversion/tier-pricing/quality/working
 capital/risk/should-cost math, double-counting guards, yield-adjusted good units, platform
 ship-set and box-build reconciliation, scenario overrides (including inventory-ownership
 conversion), Monte Carlo reproducibility, an end-to-end test asserting the sample-data
 economics story, interaction tests proving key controls actually drive the numbers, and a
 smoke test that renders all 21 Streamlit pages headlessly, plus guardrails that every
-data table has a UI editor and that a settings edit actually moves engine output. The suite is run against both
+data table has a UI editor, that a settings edit actually moves engine output, and that no
+table bypasses the shared column formatter. The suite is run against both
 pandas 2.x and 3.x, since Streamlit Cloud resolves the newer major version.
 
 ## Known limitations (v1)

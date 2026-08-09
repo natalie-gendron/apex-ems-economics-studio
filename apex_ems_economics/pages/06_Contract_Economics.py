@@ -2,6 +2,7 @@
 import pandas as pd
 import streamlit as st
 
+from components.tables import display_table
 from components.state import editable_table, get_data, page_setup
 from services.contract_parser_service import extract_terms
 
@@ -17,14 +18,14 @@ st.subheader("Term status by supplier")
 if not terms.empty:
     pivot = terms.pivot_table(index="supplier_id", columns="status",
                               values="term_id", aggfunc="count", fill_value=0)
-    st.dataframe(pivot, width="stretch")
+    display_table(pivot.reset_index(), hide_index=True)
     inferred = terms[terms["status"].isin(["Inferred", "Missing"])]
     if not inferred.empty:
         st.warning(
             f"{len(inferred)} terms are Inferred or Missing. The model still runs - it uses "
             "clearly labeled assumptions - but these terms are negotiation and validation priorities:")
-        st.dataframe(inferred[["supplier_id", "category", "term_name", "status", "confidence", "notes"]],
-                     hide_index=True, width="stretch")
+        display_table(inferred[["supplier_id", "category", "term_name",
+                                "status", "confidence", "notes"]])
 
 st.subheader("Supplier quotes (pricing terms)")
 st.caption(
@@ -60,7 +61,7 @@ if category_filter:
     view = view[view["category"].isin(category_filter)]
 
 if supplier_filter or category_filter:
-    st.dataframe(view, hide_index=True, width="stretch")
+    display_table(view)
     st.caption("Clear filters to edit the full register below.")
 else:
     editable_table("contract_terms", column_config={
@@ -101,7 +102,7 @@ if st.button("Extract candidate terms") and pasted.strip():
 
 extracted = st.session_state.get("extracted_terms") or []
 if extracted:
-    st.dataframe(pd.DataFrame([e.__dict__ for e in extracted]), hide_index=True, width="stretch")
+    display_table(pd.DataFrame([e.__dict__ for e in extracted]))
     col1, col2 = st.columns([2, 3])
     suppliers = data["suppliers"]
     names = dict(zip(suppliers["supplier_id"], suppliers["supplier_name"]))

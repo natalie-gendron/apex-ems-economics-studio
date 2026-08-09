@@ -4,6 +4,7 @@ import streamlit as st
 
 from components.executive_cards import formula_expander
 from components.formatting import fmt_currency
+from components.tables import display_table
 from components.state import editable_table, get_data, page_setup
 from core.economics_engine import material_cost_per_unit
 from core.should_cost_engine import unexplained_residual
@@ -51,8 +52,8 @@ for pid in data["products"]["product_id"]:
         "OEM-consigned $/unit": mc["consigned_material"],
     })
 rollup = pd.DataFrame(rows)
-st.dataframe(rollup, hide_index=True, width="stretch", column_config={
-    col: st.column_config.NumberColumn(col, format="$%,.2f")
+display_table(rollup, overrides={
+    col: st.column_config.NumberColumn(col, format="$%,.0f")
     for col in ["Material $/unit", "EMS-procured $/unit", "OEM-consigned $/unit"]})
 
 st.divider()
@@ -80,7 +81,7 @@ for _, q in quotes.iterrows():
         "Bundled quote": pd.isna(q.get("quoted_material_content")),
     })
 residuals = pd.DataFrame(res_rows)
-st.dataframe(residuals, hide_index=True, width="stretch", column_config={
+display_table(residuals, overrides={
     "Quoted price": st.column_config.NumberColumn(format="$%,.0f"),
     "Identified EMS material": st.column_config.NumberColumn(format="$%,.0f"),
     "Consigned (excluded)": st.column_config.NumberColumn(format="$%,.0f"),

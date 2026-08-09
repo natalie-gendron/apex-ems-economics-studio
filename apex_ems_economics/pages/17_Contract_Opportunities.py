@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from components.formatting import fmt_currency_compact
+from components.tables import display_table
 from components.state import editable_table, get_data, get_settings, page_setup
 from core.config import carrying_cost_pct
 
@@ -46,7 +47,7 @@ if not levers.empty:
     view = ranked[["lever_id", "supplier_id", "lever", "proposed_change", "annual_savings",
                    "working_capital_impact", "total_annual_value", "difficulty_score",
                    "risk_impact", "confidence", "owner", "next_action"]]
-    st.dataframe(view, hide_index=True, width="stretch", column_config={
+    display_table(view, overrides={
         "annual_savings": st.column_config.NumberColumn("P&L $/yr", format="$%,.0f"),
         "working_capital_impact": st.column_config.NumberColumn("Cash", format="$%,.0f"),
         "total_annual_value": st.column_config.NumberColumn("Total annual value*", format="$%,.0f"),

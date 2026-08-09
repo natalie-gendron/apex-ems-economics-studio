@@ -2,6 +2,7 @@
 import streamlit as st
 
 from components.executive_cards import formula_expander
+from components.tables import display_table
 from components.state import editable_table, get_data, get_result, page_setup, scenario_selector
 from core.capacity_engine import capacity_analysis, volume_shift_feasibility
 
@@ -37,10 +38,9 @@ else:
                 "overtime_capacity", "allocated_volume_model", "incremental_feasible",
                 "volume_feasible", "utilization_pct", "reservation_fee_annual",
                 "constraint_notes"]]
-    st.dataframe(view, hide_index=True, width="stretch", column_config={
+    display_table(view, overrides={
         "volume_feasible": st.column_config.CheckboxColumn("Feasible?"),
         "utilization_pct": st.column_config.NumberColumn("Utilization", format="%.0f%%"),
-        "reservation_fee_annual": st.column_config.NumberColumn("Reservation fee", format="$%,.0f"),
     })
     infeasible = cap[~cap["volume_feasible"]]
     if not infeasible.empty:

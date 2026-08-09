@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from components.executive_cards import formula_expander
+from components.tables import display_table
 from components.state import editable_table, get_data, page_setup
 from core.economics_engine import conversion_cost_per_unit, material_cost_per_unit
 
@@ -58,7 +59,7 @@ for _, cc in data["conversion_costs"].iterrows():
     })
 df = pd.DataFrame(rows)
 money_cols = [c for c in df.columns if c not in ("product_id", "supplier_id", "confidence")]
-st.dataframe(df, hide_index=True, width="stretch", column_config={
+display_table(df, overrides={
     c: st.column_config.NumberColumn(c, format="$%,.2f") for c in money_cols})
 st.caption("Labor-rate contrast in the sample data: Guadalajara $9.50/hr vs Penang $4.10/hr vs "
            "Kaohsiung $6.80/hr — cheap labor does not decide total economics on its own.")

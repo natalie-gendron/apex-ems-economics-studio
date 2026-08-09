@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from components.executive_cards import formula_expander
+from components.tables import display_table
 from components.state import editable_table, get_data, get_result, get_settings, page_setup, scenario_selector
 from core.quality_engine import copq, get_quality_row
 
@@ -64,7 +65,7 @@ for _, line in result.line_items.iterrows():
     })
 df = pd.DataFrame(rows)
 money = [c for c in df.columns if c not in ("Product", "Supplier", "Final yield %")]
-st.dataframe(df, hide_index=True, width="stretch", column_config={
+display_table(df, overrides={
     **{c: st.column_config.NumberColumn(c, format="$%,.0f") for c in money},
     "COPQ $/unit": st.column_config.NumberColumn("COPQ $/unit", format="$%,.2f"),
     "Final yield %": st.column_config.NumberColumn("Final yield %", format="%.1f%%")})

@@ -3,6 +3,7 @@ import streamlit as st
 
 from components.executive_cards import formula_expander, metric_row
 from components.formatting import fmt_currency_compact
+from components.tables import display_table
 from components.state import editable_table, get_data, get_result, get_settings, page_setup, scenario_selector
 from core import inventory_engine
 from core.inventory_engine import carrying_cost_decomposition, exposure_summary, ownership_location_matrix
@@ -45,7 +46,7 @@ with col1:
 with col2:
     st.subheader("Carrying-cost decomposition")
     decomp = carrying_cost_decomposition(exp.get("oem_owned_total", 0.0), settings)
-    st.dataframe(decomp, hide_index=True, width="stretch", column_config={
+    display_table(decomp, overrides={
         "Rate %": st.column_config.NumberColumn(format="%.2f%%"),
         "Annual cost": st.column_config.NumberColumn(format="$%,.0f")})
     st.caption("Components are editable in global_settings.csv (cost of capital, storage, "
@@ -74,7 +75,7 @@ if not li.empty:
     st.subheader(f"Scenario working-capital cost: {scenario_name}")
     view = li[["product_name", "supplier_name", "oem_inventory_value",
                "wc_carrying", "wc_advance", "wc_terms_effect", "wc_cost"]]
-    st.dataframe(view, hide_index=True, width="stretch", column_config={
+    display_table(view, overrides={
         c: st.column_config.NumberColumn(c, format="$%,.0f")
         for c in ["oem_inventory_value", "wc_carrying", "wc_advance", "wc_terms_effect", "wc_cost"]})
     dio = inventory_engine.days_inventory_outstanding(

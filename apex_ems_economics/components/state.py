@@ -12,6 +12,7 @@ from typing import Dict, Tuple
 import pandas as pd
 import streamlit as st
 
+from components.column_config import auto_column_config
 from core import scenario_engine
 from core.config import load_settings
 from core.economics_engine import ScenarioResult, compute_scenario
@@ -142,7 +143,7 @@ def editable_table(
         st.caption(help_text)
     edited = st.data_editor(
         df, num_rows="dynamic", width="stretch", key=key or f"editor_{entity}",
-        column_config=column_config, disabled=disabled)
+        column_config=auto_column_config(df, column_config), disabled=disabled)
     if not disabled and not edited.equals(df):
         set_table(entity, edited)
         # Recompute the whole page immediately so metrics, charts, and engine

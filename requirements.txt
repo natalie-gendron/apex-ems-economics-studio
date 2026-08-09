@@ -1,7 +1,7 @@
 # Root requirements for Streamlit Community Cloud (it reads dependencies from
 # the repository root). Verified on pandas 2.3.3 and 3.0.5; ranges stay loose
 # enough to resolve wheels on Cloud's Python 3.14.
-streamlit>=1.50
+streamlit>=1.50,<2
 pandas>=2.3,<4
 numpy>=2.0,<3
 plotly>=6.0,<7

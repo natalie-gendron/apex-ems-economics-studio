@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from components.executive_cards import metric_row
+from components.tables import display_table
 from components.state import editable_table, get_data, page_setup
 from core.validation_engine import data_quality_score, validate
 from services.ai_insight_service import challenge_assumptions
@@ -45,15 +46,14 @@ with col1:
     st.subheader("Assumptions needing validation")
     st.caption("Ranked by low confidence × high financial impact (the 'assumption challenge').")
     challenged = challenge_assumptions(data)
-    st.dataframe(challenged, hide_index=True, width="stretch")
+    display_table(challenged)
 with col2:
     st.subheader("Validation findings")
     issues = validate(data)
     severity_filter = st.multiselect(
         "Severity", ["Error", "Warning", "Information", "Data-quality issue"],
         default=["Error", "Warning", "Data-quality issue"])
-    st.dataframe(issues[issues["severity"].isin(severity_filter)],
-                 hide_index=True, width="stretch")
+    display_table(issues[issues["severity"].isin(severity_filter)])
 
 st.divider()
 st.subheader("Recommended data-collection priorities")
@@ -83,4 +83,4 @@ if len(low_bom):
         "Priority": "Medium", "Item": f"Improve BOM pricing confidence for: {', '.join(low_bom)}",
         "Why": "Should-cost and residual analysis are benchmark-grade for these products.",
         "Suggested owner": "Engineering / Procurement"})
-st.dataframe(pd.DataFrame(priorities), hide_index=True, width="stretch")
+display_table(pd.DataFrame(priorities))

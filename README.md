@@ -23,12 +23,14 @@ python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py             # run the app
-pytest                           # 77 tests
+pytest                           # 80 tests
 ```
 
 ## Highlights
 
 - Deterministic quote → true-economic-cost engine (20 Streamlit pages, UI-free core)
+- **Cost structure explorer** — treemap of platform → board → BOM line, colored by
+  ownership or confidence, with an exact reconciling table
 - **Every assumption editable in the app** — 23 data tables plus a grouped Model
   Settings page; nothing that moves a dollar is buried in code
 - Full per-system COGS: EMS ship-set + itemized purchased system material + labeled in-house

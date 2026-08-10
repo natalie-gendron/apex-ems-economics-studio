@@ -161,3 +161,75 @@ def scenario_delta_bars(comparison: pd.DataFrame, baseline_id: str, title: str) 
     layout["yaxis"] = {**layout["yaxis"], "title": "Δ total economic cost vs baseline ($/yr)"}
     fig.update_layout(title=title, showlegend=False, **layout)
     return fig
+
+
+# ---------------------------------------------------------------------------
+# Cost structure treemap
+# ---------------------------------------------------------------------------
+
+# Ordinal confidence scale: low confidence is the signal worth seeing, so it
+# reads as a status (with the label in the tile), not as a categorical hue.
+CONFIDENCE_COLORS = {
+    "High": SEQ_BLUE[4], "Medium": "#eda100", "Low": "#d03b3b",
+    "Modeled": "#898781", "Unknown": "#c3c2b7",
+}
+OWNERSHIP_COLORS = {
+    "OEM-consigned material": CATEGORICAL[0],
+    "EMS-procured material": CATEGORICAL[2],
+    "EMS conversion & margin": CATEGORICAL[1],
+    "OEM incremental cost": CATEGORICAL[6],
+    "OEM direct purchase (non-EMS)": CATEGORICAL[3],
+}
+BRANCH_COLOR = "#e1e0d9"
+
+
+def _lens_colors(nodes: pd.DataFrame, lens: str) -> List[str]:
+    """One color per node; branches stay neutral so leaves carry the signal."""
+    if lens == "Confidence":
+        mapping, column = CONFIDENCE_COLORS, "confidence"
+    elif lens == "Ownership":
+        mapping, column = OWNERSHIP_COLORS, "ownership"
+    else:
+        column = {"Supplier": "supplier", "Category": "category"}[lens]
+        values = sorted(v for v in nodes.loc[nodes["is_leaf"], column].unique() if v)
+        mapping = {v: CATEGORICAL[i % len(CATEGORICAL)] for i, v in enumerate(values)}
+    return [mapping.get(row[column], BRANCH_COLOR) if row["is_leaf"] else BRANCH_COLOR
+            for _, row in nodes.iterrows()]
+
+
+def cost_treemap(nodes: pd.DataFrame, lens: str, title: str, unit_label: str) -> go.Figure:
+    """Hierarchical cost structure. Values are additive up the tree."""
+    if nodes.empty:
+        return go.Figure()
+    fig = go.Figure(go.Treemap(
+        ids=nodes["id"], labels=nodes["label"], parents=nodes["parent"],
+        values=nodes["value"], branchvalues="total",
+        marker=dict(colors=_lens_colors(nodes, lens),
+                    line=dict(color="#fcfcfb", width=2)),
+        texttemplate="<b>%{label}</b><br>%{value:$,.0f}",
+        hovertemplate=("<b>%{label}</b><br>" + unit_label + ": %{value:$,.0f}"
+                       "<br>Share of parent: %{percentParent:.1%}"
+                       "<br>Share of total: %{percentRoot:.1%}<extra></extra>"),
+        tiling=dict(pad=2), pathbar=dict(visible=True),
+    ))
+    fig.update_layout(title=title, margin=dict(l=6, r=6, t=48, b=6), height=560,
+                      font=dict(family="system-ui, -apple-system, Segoe UI, sans-serif",
+                                color=INK, size=13),
+                      paper_bgcolor="rgba(0,0,0,0)")
+    return fig
+
+
+def lens_legend(nodes: pd.DataFrame, lens: str) -> pd.DataFrame:
+    """Legend rows for the active lens - identity is never color-alone."""
+    if nodes.empty:
+        return pd.DataFrame()
+    column = {"Confidence": "confidence", "Ownership": "ownership",
+              "Supplier": "supplier", "Category": "category"}[lens]
+    leaves = nodes[nodes["is_leaf"] & (nodes[column] != "")]
+    if leaves.empty:
+        return pd.DataFrame()
+    grouped = leaves.groupby(column, as_index=False)["value"].sum()
+    grouped = grouped.sort_values("value", ascending=False)
+    total = grouped["value"].sum()
+    grouped["Share"] = grouped["value"] / total * 100 if total else 0
+    return grouped.rename(columns={column: lens, "value": "Cost"})

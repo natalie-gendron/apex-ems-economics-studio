@@ -78,7 +78,14 @@ Questions it answers:
    status (Confirmed / Estimated / Benchmarked / Inferred / Missing / Stale) and a
    confidence level; a composite data-quality score qualifies every recommendation.
 
-6. **Every assumption is editable in the app.** All 23 data tables have a UI editor, and every
+6. **Structure is visual where structure is the point.** The BOM page opens with a cost
+   structure explorer: a treemap of platform → board → BOM line, sized by cost and colored
+   by ownership, **confidence**, supplier, or commodity. The confidence lens is the one that
+   earns its place — it shows how much of your spend rests on unconfirmed estimates. Every
+   level sums exactly to its parent and to the engine's totals, and an exact indented table
+   sits beneath it (treemaps show proportion, not precise values).
+
+7. **Every assumption is editable in the app.** All 23 data tables have a UI editor, and every
    global assumption — carrying-cost components, cost of capital, quality responsibility
    shares, should-cost heuristics, Monte Carlo couplings, benchmark cost structure — lives on
    the **Model Settings** page with its unit and a plain-English description. Nothing that
@@ -118,6 +125,7 @@ apex_ems_economics/
 ├── core/                         # Deterministic engines (UI-independent, importable)
 │   ├── economics_engine.py       #   quote → true economic cost; bridges; scenario deltas
 │   ├── platform_engine.py        #   board economics → cost per system shipped (QPA ship-sets)
+│   ├── structure_engine.py       #   hierarchical cost tree behind the treemap explorer
 │   ├── scenario_engine.py        #   baseline + overrides (absolute/multiplier/delta)
 │   ├── inventory_engine.py       #   ownership×location, carrying cost, WC cost
 │   ├── quality_engine.py         #   COPQ with contractual responsibility shares
@@ -142,7 +150,7 @@ apex_ems_economics/
 │   └── column_config.py          #   automatic friendly labels + currency/percent formats
 ├── data/sample/                  # Fictional sample dataset (23 CSV entities)
 ├── data/templates/               # Blank headers for starting a fresh model
-└── tests/                        # 77 tests incl. end-to-end, interaction, and smoke tests
+└── tests/                        # 80 tests incl. end-to-end, interaction, and smoke tests
 ```
 
 **Architecture rules:** business logic lives only in `core/`; the engines take a plain
@@ -260,7 +268,7 @@ validation — extracted contract terms are created as *Inferred / Low confidenc
 
 ## Testing
 
-`pytest` runs 77 tests: unit tests for material/conversion/tier-pricing/quality/working
+`pytest` runs 80 tests: unit tests for material/conversion/tier-pricing/quality/working
 capital/risk/should-cost math, double-counting guards, yield-adjusted good units, platform
 ship-set and box-build reconciliation, scenario overrides (including inventory-ownership
 conversion), Monte Carlo reproducibility, an end-to-end test asserting the sample-data

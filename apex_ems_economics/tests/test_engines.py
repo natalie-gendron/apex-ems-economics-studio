@@ -355,3 +355,59 @@ def test_validation_runs_and_flags_sample_issues(data):
 def test_data_quality_score_bounds(data):
     score = data_quality_score(data)
     assert 0 <= score["overall_score"] <= 100
+
+
+# ---------------------------------------------------------------- cost structure tree
+def test_cost_structure_reconciles_and_nests(data, baseline, settings):
+    """The treemap hierarchy must sum exactly to the engine's economics."""
+    from core.platform_engine import platform_rollup
+    from core.structure_engine import cost_structure, structure_table
+
+    nodes, meta = cost_structure(data, baseline, platform_id="PLT-D9000",
+                                 basis="per_system")
+    assert not nodes.empty and not meta["warnings"]
+
+    # Every parent equals the sum of its children (required by branchvalues="total").
+    for _, parent in nodes[~nodes["is_leaf"]].iterrows():
+        children = nodes[nodes["parent"] == parent["id"]]
+        assert children["value"].sum() == pytest.approx(parent["value"], rel=1e-9)
+
+    # No negative tiles - a treemap cannot render them.
+    assert (nodes["value"] >= 0).all()
+
+    # Per-system totals must match the Platform Rollup page exactly.
+    roll = platform_rollup(data, baseline, settings).set_index("platform_id").loc["PLT-D9000"]
+    level2 = nodes[nodes["level"] == 2]
+    boards = level2[level2["label"] != "System material (non-EMS)"]["value"].sum()
+    system_material = level2[level2["label"] == "System material (non-EMS)"]["value"].sum()
+    assert boards == pytest.approx(roll["ems_content_per_system"], rel=1e-9)
+    assert system_material == pytest.approx(roll["system_material_per_system"], rel=1e-9)
+
+    # The exact companion table carries every node.
+    assert len(structure_table(nodes)) == len(nodes)
+
+
+def test_cost_structure_board_scope_matches_line_items(data, baseline):
+    """Board scope must reconcile to that product's modeled economic cost."""
+    from core.structure_engine import cost_structure
+
+    nodes, _ = cost_structure(data, baseline, product_id="P-100", basis="annual")
+    li = baseline.line_items
+    expected = li[li["product_id"] == "P-100"]["total_economic_cost"].sum()
+    assert nodes[nodes["level"] == 1]["value"].sum() == pytest.approx(expected, rel=1e-9)
+
+    # Ownership lens must separate consigned material from EMS-procured material.
+    owners = set(nodes.loc[nodes["is_leaf"], "ownership"])
+    assert {"OEM-consigned material", "EMS-procured material",
+            "EMS conversion & margin", "OEM incremental cost"} <= owners
+
+
+def test_cost_structure_splits_dual_sourced_boards(data, settings):
+    """A board split across suppliers shows each source, not a blend."""
+    from core.structure_engine import cost_structure
+
+    dual = compute_scenario(data, "SCN-004", settings)   # P-200 dual-sourced 70/30
+    nodes, _ = cost_structure(data, dual, product_id="P-200", basis="annual")
+    branches = set(nodes[nodes["level"] == 2]["label"])
+    assert any("Atlas" in b for b in branches)
+    assert any("Pacific" in b for b in branches)

@@ -49,3 +49,16 @@ test-equipment manufacturer and three fictional EMS suppliers.
 
 Related Apex modules: [Strategic Network Optimizer](https://github.com/natalie-gendron/apex-strategic-network-optimizer) ·
 [SIOP Decision Engine](https://github.com/natalie-gendron/apex-siop-decision-engine)
+
+## License and provenance
+
+Copyright © 2026 Natalie Gendron. All rights reserved — see [LICENSE](LICENSE).
+
+This is **independent portfolio work**, built to demonstrate an approach to operations-finance
+decision modeling. The repository is public so the work can be read and evaluated; it is **not
+open source**. Commercial, production, or internal business use requires written permission.
+
+**Every figure in this repository is fictional.** The manufacturer, the EMS suppliers, the
+products, prices, contract terms, volumes, yields, and performance data were all invented for
+demonstration. Nothing here represents or derives from the confidential information or actual
+economics of any real organization — that was a deliberate design constraint, not an omission.

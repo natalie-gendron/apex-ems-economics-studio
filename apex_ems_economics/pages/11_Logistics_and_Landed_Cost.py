@@ -4,6 +4,7 @@ import streamlit as st
 
 from components.executive_cards import formula_expander
 from components.tables import display_table
+from components.formatting import md
 from components.state import editable_table, get_data, get_result, page_setup, scenario_selector
 from core.logistics_engine import get_lane, landed_cost_per_unit
 
@@ -59,7 +60,7 @@ display_table(df, overrides={
     **{c: st.column_config.NumberColumn(c, format="$%,.2f") for c in money},
     "Annual logistics + duties": st.column_config.NumberColumn(
         "Annual logistics + duties", format="$%,.0f")})
-st.caption("In the sample data the Penang lane carries ~$118/unit ocean freight plus a 4.5% "
+st.caption(md("In the sample data the Penang lane carries ~$118/unit ocean freight plus a 4.5% "
            "tariff — on a >$10K channel card the tariff alone is ~$450/unit, a major reason "
            "Meridian's low quote does not survive landed-cost scrutiny. Carbon/sustainability "
-           "cost is a future enhancement.")
+           "cost is a future enhancement."))

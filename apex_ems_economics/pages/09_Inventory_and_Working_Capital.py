@@ -2,7 +2,7 @@
 import streamlit as st
 
 from components.executive_cards import formula_expander, metric_row
-from components.formatting import fmt_currency_compact
+from components.formatting import fmt_currency_compact, md
 from components.tables import display_table
 from components.state import editable_table, get_data, get_result, get_settings, page_setup, scenario_selector
 from core import inventory_engine
@@ -80,10 +80,10 @@ if not li.empty:
         for c in ["oem_inventory_value", "wc_carrying", "wc_advance", "wc_terms_effect", "wc_cost"]})
     dio = inventory_engine.days_inventory_outstanding(
         result.totals["oem_inventory_value"], result.totals["cogs_relevant_cost"])
-    st.caption(f"Modeled OEM inventory {fmt_currency_compact(result.totals['oem_inventory_value'])} "
+    st.caption(md(f"Modeled OEM inventory {fmt_currency_compact(result.totals['oem_inventory_value'])} "
                f"≈ {dio:.0f} days inventory outstanding at scenario COGS. Note the payment-terms "
                "effect: Pacific (net 75) generates a financing benefit; Meridian (net 30 + 10% "
-               "advance) a financing cost.")
+               "advance) a financing cost."))
 
 st.divider()
 st.subheader("Inventory records")

@@ -105,13 +105,13 @@ def narrative_insights(
 
     drivers: List[str] = []
     for bucket, label in [
-        ("quality_cost", "OEM-borne quality cost"), ("wc_cost", "working-capital cost"),
+        ("quality_cost", "OEM-borne quality cost"), ("wc_cost", "Working-capital cost"),
         ("service_cost", "service cost"), ("risk_cost", "expected risk cost"),
         ("logistics_cost", "logistics cost"), ("duty_cost", "duties and tariffs"),
     ]:
         val = t.get(bucket, 0)
         if val > 0:
-            drivers.append(f"{label.capitalize()}: ${val:,.0f}/yr")
+            drivers.append(f"{label[0].upper() + label[1:]}: ${val:,.0f}/yr")
     drivers.sort(key=lambda s: -float(s.split("$")[1].replace(",", "").replace("/yr", "")))
 
     if not comparison.empty and "delta_total_vs_baseline" in comparison.columns:

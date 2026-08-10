@@ -3,6 +3,7 @@ import streamlit as st
 
 from components.executive_cards import formula_expander
 from components.tables import display_table
+from components.formatting import md
 from components.state import get_data, get_settings, page_setup, set_table
 from core.config import benchmark_structure
 from core.should_cost_engine import (
@@ -59,10 +60,10 @@ if method.startswith("Level 1"):
                    "model default (then they persist and appear on **Model Settings**).")
     bench = benchmark_should_cost(data, product_id, structure)
     if bench["should_cost"] == bench["should_cost"]:  # not NaN
-        st.caption(f"Benchmark should-cost = EMS material ${bench['ems_material']:,.0f} "
+        st.caption(md(f"Benchmark should-cost = EMS material ${bench['ems_material']:,.0f} "
                    f"({bench['material_source']}) ÷ {bench['material_share_pct']:.0f}% material share "
                    f"= **${bench['should_cost']:,.0f}** — anchored on material so it stays "
-                   "independent of the quote (percent-of-quote would be circular).")
+                   "independent of the quote (percent-of-quote would be circular)."))
     else:
         st.warning("No material estimate available (no BOM and no quoted material content) — "
                    "the benchmark should-cost cannot be computed for this product.")

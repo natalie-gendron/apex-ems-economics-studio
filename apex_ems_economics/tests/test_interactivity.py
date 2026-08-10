@@ -123,6 +123,53 @@ def test_currency_and_labels_are_inferred_correctly():
     assert humanize("first_pass_yield_pct") == "First pass yield %"
 
 
+def test_currency_in_markdown_is_escaped_from_latex():
+    """Streamlit markdown parses $...$ as LaTeX, eating the dollar signs.
+
+    Any markdown/caption whose text can contain two or more '$' must go
+    through formatting.md(), or executive narratives silently lose their
+    currency symbols.
+    """
+    import ast
+    import glob
+
+    from components.formatting import md
+
+    assert md("spend is $1; cost is $2") == r"spend is \$1; cost is \$2"
+
+    targets = {"markdown", "caption", "success", "info", "warning", "error"}
+    offenders = []
+    for path in glob.glob(os.path.join(ROOT, "pages", "*.py")) + [os.path.join(ROOT, "app.py")]:
+        src = open(path).read()
+        tree = ast.parse(src)
+        for node in ast.walk(tree):
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                    and node.func.attr in targets and node.args):
+                seg = ast.get_source_segment(src, node.args[0]) or ""
+                if seg.strip().startswith("md(") or "```" in seg:
+                    continue
+                if seg.count("$") >= 2 or "fmt_currency" in seg:
+                    offenders.append(f"{os.path.basename(path)}:{node.lineno}")
+    assert not offenders, "unescaped currency in markdown: " + ", ".join(offenders)
+
+
+def test_narrative_summary_carries_currency_symbols():
+    from core.config import load_settings
+    from core.economics_engine import compare_scenarios, compute_scenario
+    from repositories.csv_repository import CsvRepository
+    from services.ai_insight_service import narrative_insights
+
+    data = CsvRepository().load_all()
+    settings = load_settings(data)
+    results = {s: compute_scenario(data, s, settings)
+               for s in data["scenarios"]["scenario_id"]}
+    insights = narrative_insights(data, results, "SCN-001",
+                                  compare_scenarios(results, "SCN-001"))
+    assert insights["summary"][0].count("$") == 2
+    # Driver labels must not be mangled by naive capitalization.
+    assert not any(d.startswith("Oem") for d in insights["key_drivers"])
+
+
 def test_global_settings_changes_flow_into_the_engines():
     """A settings edit must move real numbers, not just the settings table."""
     from core.config import load_settings

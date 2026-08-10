@@ -3,7 +3,7 @@
 # enough to resolve wheels on Cloud's Python 3.14.
 streamlit>=1.50,<2
 pandas>=2.3,<4
-numpy>=2.0,<3
+numpy>=2.0,<3.0
 plotly>=6.0,<7
 pydantic>=2.5,<3
 openpyxl>=3.1,<4

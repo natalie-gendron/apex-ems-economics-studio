@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple
 
 import streamlit as st
 
-from components.formatting import fmt_currency_compact
+from components.formatting import fmt_currency_compact, md
 
 
 def metric_row(metrics: List[Tuple[str, str, Optional[str]]], columns: int = 4) -> None:
@@ -27,9 +27,9 @@ def callout_grid(callouts: List[Tuple[str, str, str]], columns: int = 3) -> None
         for col, (title, headline, detail) in zip(cols, callouts[start:start + columns]):
             with col:
                 with st.container(border=True):
-                    st.caption(title)
-                    st.markdown(f"**{headline}**")
-                    st.caption(detail)
+                    st.caption(md(title))
+                    st.markdown(f"**{md(headline)}**")
+                    st.caption(md(detail))
 
 
 def top_list(title: str, items: List[Tuple[str, float]], money: bool = True) -> None:

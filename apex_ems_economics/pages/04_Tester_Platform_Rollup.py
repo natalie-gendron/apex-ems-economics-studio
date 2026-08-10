@@ -3,7 +3,7 @@ import streamlit as st
 
 from components import charts
 from components.executive_cards import formula_expander, metric_row
-from components.formatting import fmt_currency, fmt_currency_compact, fmt_pct, fmt_units
+from components.formatting import fmt_currency, fmt_currency_compact, fmt_pct, fmt_units, md
 from components.state import (editable_table, get_data, get_result, get_scenario_data,
                               get_settings, page_setup, scenario_selector)
 from components.tables import money_table
@@ -134,10 +134,10 @@ else:
         download_name=f"ship_set_{platform_id}")
     row = rollup.set_index("platform_id").loc[platform_id]
     st.caption(
-        f"At {fmt_units(row['systems_shipped_per_year'])} systems/yr, every "
+        md(f"At {fmt_units(row['systems_shipped_per_year'])} systems/yr, every "
         f"{fmt_currency(100)} of ship-set cost is "
         f"{fmt_currency_compact(row['systems_shipped_per_year'] * 100)} of annual spend — "
-        "which is why board-level sourcing decisions scale so hard at the platform level.")
+        "which is why board-level sourcing decisions scale so hard at the platform level."))
 
     sys_detail = system_component_detail(data, platform_id)
     if not sys_detail.empty and float(row["box_build_fee_per_system"]) == 0:
@@ -158,9 +158,9 @@ else:
                    "box-build agreement, which is what scenario **SCN-005** prices.")
     elif float(row["box_build_fee_per_system"]) > 0:
         st.success(
-            f"**Box build active for this platform.** The EMS procures the system material and "
+            md(f"**Box build active for this platform.** The EMS procures the system material and "
             f"integrates the system for {fmt_currency(row['box_build_fee_per_system'])} per "
-            "system; OEM purchased material and in-house assembly both drop to zero.")
+            "system; OEM purchased material and in-house assembly both drop to zero."))
 
 # ------------------------------------------------------------------ subassemblies
 st.divider()

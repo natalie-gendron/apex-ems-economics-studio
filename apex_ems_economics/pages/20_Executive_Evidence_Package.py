@@ -4,7 +4,7 @@ from datetime import date
 import pandas as pd
 import streamlit as st
 
-from components.formatting import fmt_currency_compact
+from components.formatting import fmt_currency_compact, md
 from components.tables import display_table
 from components.state import (baseline_id, editable_table, get_data, get_result,
                               page_setup, set_table)
@@ -92,31 +92,32 @@ col1.metric("Year-1 total economic Δ", fmt_currency_compact(delta_total), delta
 col2.metric("Recurring economic Δ/yr", fmt_currency_compact(delta_recurring))
 col3.metric("Gross-margin impact (−ΔCOGS)", fmt_currency_compact(-delta_cogs))
 col4.metric("Cash-flow impact (yr 1)", fmt_currency_compact(cash_impact))
-st.caption(f"One-time + transition cost of the recommended scenario: {fmt_currency_compact(one_time)}. "
-           f"Data-confidence score: {dq['overall_score']:.0f}/100.")
+st.caption(md(f"One-time + transition cost of the recommended scenario: "
+              f"{fmt_currency_compact(one_time)}. "
+              f"Data-confidence score: {dq['overall_score']:.0f}/100."))
 
 # ----------------------------------------------------------- narrative
 insights = narrative_insights(data, results, base_id, comparison)
 st.subheader("Executive narrative (deterministic template)")
 for line in insights["summary"]:
-    st.markdown(f"- {line}")
-st.markdown("**Key drivers beyond the quote:** " + " · ".join(insights["key_drivers"]))
+    st.markdown(f"- {md(line)}")
+st.markdown("**Key drivers beyond the quote:** " + md(" · ".join(insights["key_drivers"])))
 
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("**Recommended actions**")
     for rec in recs[:6]:
         with st.expander(rec["action"]):
-            st.markdown(f"**Why:** {rec['why']}")
-            st.markdown(f"**Financial impact:** {rec['financial_impact']}")
-            st.markdown(f"**Key risks:** {rec['key_risks']}")
-            st.markdown(f"**Required conditions:** {rec['required_conditions']}")
-            st.markdown(f"**Confidence:** {rec['confidence']} · **Next step:** {rec['next_step']}")
+            st.markdown(f"**Why:** {md(rec['why'])}")
+            st.markdown(f"**Financial impact:** {md(rec['financial_impact'])}")
+            st.markdown(f"**Key risks:** {md(rec['key_risks'])}")
+            st.markdown(f"**Required conditions:** {md(rec['required_conditions'])}")
+            st.markdown(f"**Confidence:** {rec['confidence']} · **Next step:** {md(rec['next_step'])}")
 with col2:
     st.markdown("**Anomalies & watch items**")
     anomalies = detect_anomalies(data, base_result)
     for a in anomalies[:8]:
-        st.markdown(f"- **{a['type']}** — {a['subject']}: {a['detail']}")
+        st.markdown(f"- **{a['type']}** — {md(a['subject'])}: {md(a['detail'])}")
     st.markdown("**Questions to close before deciding**")
     for func in ("procurement", "quality", "engineering", "supplier"):
         for q in insights[f"questions_{func}"][:2]:

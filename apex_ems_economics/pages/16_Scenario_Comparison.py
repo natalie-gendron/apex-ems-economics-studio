@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from components import charts
-from components.formatting import fmt_currency_compact
+from components.formatting import fmt_currency_compact, md
 from components.state import baseline_id, get_data, get_result, get_settings, page_setup
 from components.tables import money_table
 from core.capacity_engine import capacity_analysis
@@ -156,7 +156,7 @@ if enable_mc:
                 for sid in mc_scenarios:
                     if sid != base_id:
                         ps = probability_savings_exceed(sim["totals"], sid, base_id, target)
-                        st.markdown(f"P(savings of {names.get(sid)} > {fmt_currency_compact(target)}) = {ps:.0%}")
+                        st.markdown(md(f"P(savings of {names.get(sid)} > {fmt_currency_compact(target)}) = {ps:.0%}"))
             else:
                 st.caption("Include the baseline scenario in the simulation to compute savings probabilities.")
         st.caption(f"Seed {sim['seed']}, {sim['iterations']} iterations — reproducible.")

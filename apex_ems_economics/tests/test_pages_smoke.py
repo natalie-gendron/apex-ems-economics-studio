@@ -15,6 +15,21 @@ def _run(path: str) -> AppTest:
     return at
 
 
+@pytest.mark.parametrize("page", PAGES + [os.path.join(ROOT, "app.py")],
+                         ids=[os.path.basename(p) for p in PAGES] + ["app.py"])
+def test_page_is_valid_python(page):
+    """Compile every page.
+
+    AppTest surfaces a syntax error as a rendered error element rather than
+    an exception, so a broken file can slip past the render test. Compiling
+    catches it directly.
+    """
+    import ast
+
+    with open(page) as handle:
+        ast.parse(handle.read(), filename=page)
+
+
 def test_home_page_renders():
     at = _run(os.path.join(ROOT, "app.py"))
     assert not at.exception

@@ -50,3 +50,14 @@ CONFIDENCE_BADGE = {"High": "🟢 High", "Medium": "🟡 Medium", "Low": "🔴 L
 
 def confidence_badge(conf: str) -> str:
     return CONFIDENCE_BADGE.get(str(conf), str(conf))
+
+
+def md(text: object) -> str:
+    """Escape text for st.markdown / st.caption.
+
+    Streamlit renders markdown with LaTeX enabled, so a line containing two
+    dollar signs (e.g. "spend is $824,560,000; cost is $1,274,284,434") is
+    parsed as math: both "$" disappear and the text between them is
+    italicized. Escaping the dollar signs keeps currency readable.
+    """
+    return str(text).replace("$", r"\$")

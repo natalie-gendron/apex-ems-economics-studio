@@ -142,7 +142,7 @@ apex_ems_economics/
 │   └── column_config.py          #   automatic friendly labels + currency/percent formats
 ├── data/sample/                  # Fictional sample dataset (23 CSV entities)
 ├── data/templates/               # Blank headers for starting a fresh model
-└── tests/                        # 54 tests incl. end-to-end, interaction, and smoke tests
+└── tests/                        # 77 tests incl. end-to-end, interaction, and smoke tests
 ```
 
 **Architecture rules:** business logic lives only in `core/`; the engines take a plain
@@ -260,7 +260,7 @@ validation — extracted contract terms are created as *Inferred / Low confidenc
 
 ## Testing
 
-`pytest` runs 54 tests: unit tests for material/conversion/tier-pricing/quality/working
+`pytest` runs 77 tests: unit tests for material/conversion/tier-pricing/quality/working
 capital/risk/should-cost math, double-counting guards, yield-adjusted good units, platform
 ship-set and box-build reconciliation, scenario overrides (including inventory-ownership
 conversion), Monte Carlo reproducibility, an end-to-end test asserting the sample-data
